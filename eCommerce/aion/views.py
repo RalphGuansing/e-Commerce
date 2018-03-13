@@ -209,19 +209,41 @@ def delete_order(request, pk):
     order.delete()
     return HttpResponseRedirect('/cart/')
 
-#pk of user
-def get_cart(request):
-    CurrentCart = Cart.object.get(user_id=request.user, isPurchase=False)
-    #if cart does not exists then create
-    if CurrentCart is not None:
-        CurrentCart = Cart.objects.create()
+#pk of product
+def add_to_cart(request, pk):
+#    try:
+#    go = SomeModel.objects.get(foo='bar')
+#except SomeModel.DoesNotExist:
+#    go = None
+    try:
+        CurrentCart = Cart.objects.get(user_id=request.user, isPurchased=False)
+    except Cart.DoesNotExist:
+        CurrentCart = None
     
-    return HttpResponseRedirect('/cart/'+ str(CurrentCart.id) +'/add//')
-
-#pk of cart
-def add_cart(request, pk):
+    #if cart does not exists then create
+    if CurrentCart is None:
+        CurrentCart = Cart(user_id=request.user)
+#        CurrentCart.user_id = request.user
+        CurrentCart.save()
+    try:
+        order = Order.objects.get(cart_id=CurrentCart, product_id=pk)
+    except Order.DoesNotExist:
+        order = None
+    
+    if order is None:
+        order = Order(cart_id=CurrentCart,product_id=Product.objects.get(pk=pk),item_quantity = 1)
+#        order.cart_id = CurrentCart
+#        order.product_id = Product.objects.get(pk=pk)
+#        order.item_quantity = 1
+        order.save()
+        
+    else:
+        order.item_quantity += 1#quantity
+        order.save()
+    
     
     return HttpResponseRedirect('/cart/')
+
 
 def logout_view(request):
     logout(request)
