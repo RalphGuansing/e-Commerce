@@ -1,5 +1,6 @@
 {% extends 'aion/navigationbar.html' %}
 {% load static %}
+{% load humanize %}
 {% block content %}
 
 <!-- This file displays the content of the website -->
@@ -49,7 +50,7 @@
               <span class="card-title textinpost">{{product.item_name}}</span>
             </div>
             <div class="card-action">
-              <a href="#">$ {{product.item_price}}</a>
+              <a href="#">$ {{product.item_price|intcomma}}</a>
             </div>
           </div>
       </div>
@@ -71,7 +72,7 @@
                 {{product.item_description|linebreaks}}
             </div>
             <div class="card-action">
-              <a href="#">$ {{product.item_price}}</a>
+              <a href="#">$ {{product.item_price|intcomma}}</a>
             </div>
 
       </div>

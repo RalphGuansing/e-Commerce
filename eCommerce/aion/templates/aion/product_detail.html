@@ -1,6 +1,7 @@
 {% extends 'aion/navigationbar.html' %}
 {% load static %}
 {% load aion_extras %}
+{% load humanize %}
 {% block content %}
 
 <div class="main_product_details"> 
@@ -22,7 +23,7 @@
                 
             </div>
             <div class="card-action">
-              <a href="#">$ {{object.item_price}}</a>
+              <a href="#">$ {{object.item_price|intcomma}}</a>
                 
                 {% if request.user|has_group:"Product Manager"%}
                 <!--PRODUCT MANAGER FUNCTIONALITIES-->

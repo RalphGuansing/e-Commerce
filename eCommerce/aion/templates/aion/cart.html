@@ -1,6 +1,7 @@
 {% extends 'aion/navigationbar.html' %}
 {% load static %}
 {% load mathfilters %}
+{% load humanize %}
 {% block content %}
 
 <!-- This file displays the content of the website -->
@@ -82,7 +83,7 @@
     <H5>{{ order.item_quantity }}</H5>
     </div>
     <div class="col s2 center">
-    <H5>$ {{ order.product_id.item_price|mul:order.item_quantity }}</H5>
+    <H5>$ {{ order.product_id.item_price|mul:order.item_quantity|intcomma }}</H5>
         
     </div>
     <div class="col s2"><a href="{% url 'delete-order' order.id %}" class="orange-text text-lighten-1"><i class="small material-icons">clear</i></a></div>
@@ -111,7 +112,7 @@
     
     </div>
     <div class="col s2 center">
-        <H5>$ {{ totalsum }}</H5>
+        <H5>$ {{ totalsum|intcomma }}</H5>
     
     </div>
     
