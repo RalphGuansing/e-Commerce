@@ -169,4 +169,16 @@ class SearchView(generic.ListView):
         context = super(SearchView, self).get_context_data(**kwargs)
         
         return context
+
+class CategoryView(generic.ListView):
+    template_name = 'aion/home.html'
+    context_object_name = 'products'
+    
+    def get_queryset(self):
+        return Product.objects.filter(item_type_slug=self.kwargs['category']).order_by('-id')
+    
+    def get_context_data(self, **kwargs):
+        context = super(CategoryView, self).get_context_data(**kwargs)
+        
+        return context
     
