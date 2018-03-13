@@ -66,3 +66,19 @@ class Product(models.Model):
     
     def get_absolute_url(self):
         return reverse('home')
+    
+class Cart(models.Model):
+    user_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    isPurchased = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return 'cart of ' + self.user_id.username
+    
+class Order(models.Model):
+    product_id = models.ForeignKey(Product,on_delete=models.CASCADE)
+    cart_id = models.ForeignKey(Cart,on_delete=models.CASCADE)
+    item_quantity = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return 'order of ' + self.cart_id.user_id.username +' product '+str(self.product_id.id )
+
