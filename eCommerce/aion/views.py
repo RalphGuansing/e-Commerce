@@ -146,6 +146,7 @@ class ViewProduct(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["loggeduser"] = self.request.user
+        context["request"] = self.request
         return context
 
 class ViewAccount(generic.DetailView):
@@ -206,6 +207,20 @@ class CartView(TemplateView):
 def delete_order(request, pk):
     order = Order.objects.get(pk=pk)
     order.delete()
+    return HttpResponseRedirect('/cart/')
+
+#pk of user
+def get_cart(request):
+    CurrentCart = Cart.object.get(user_id=request.user, isPurchase=False)
+    #if cart does not exists then create
+    if CurrentCart is not None:
+        CurrentCart = Cart.objects.create()
+    
+    return HttpResponseRedirect('/cart/'+ str(CurrentCart.id) +'/add//')
+
+#pk of cart
+def add_cart(request, pk):
+    
     return HttpResponseRedirect('/cart/')
 
 def logout_view(request):

@@ -1,5 +1,6 @@
 {% extends 'aion/navigationbar.html' %}
 {% load static %}
+{% load aion_extras %}
 {% block content %}
 
 <div class="main_product_details"> 
@@ -23,9 +24,17 @@
             <div class="card-action">
               <a href="#">$ {{object.item_price}}</a>
                 
+                {% if request.user|has_group:"Product Manager"%}
                 <!--PRODUCT MANAGER FUNCTIONALITIES-->
                 <a href="{% url 'editproduct' object.id %}" class="waves-effect waves-light btn amber right_btn edit_btn">Edit <i class="material-icons right">edit</i></a>
                 <a href="{% url 'deleteproduct' object.id %}" class="waves-effect waves-light btn red darken-3 right_btn">Delete <i class="material-icons right">delete</i></a>
+                {% elif request.user|has_group:"Accounting Manager" %}
+                <a href="#" class="waves-effect waves-light btn amber right_btn edit_btn">Sales of this product<i class="material-icons right">attach_money</i></a>
+                <a href="#" class="waves-effect waves-light btn red darken-3 right_btn">Sales of this product's type<i class="material-icons right">attach_money</i></a>
+                {% elif request.user|has_group:"Customer" %}
+                <a href="#" class="waves-effect waves-light btn amber right_btn edit_btn">Add to Shopping Cart <i class="material-icons right">shopping_cart</i></a>
+                <a href="#" class="waves-effect waves-light btn red darken-3 right_btn">Review <i class="material-icons right">stars</i></a>
+                {% endif %}
             </div>
           </div>
       </div>
