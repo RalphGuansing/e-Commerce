@@ -20,13 +20,11 @@ class HomeView(generic.ListView):
 #        self.paginate_by = self.request.GET.get('paginate_by', self.paginate_by)
 #        return self.paginate_by
 #    
-#    def get_context_data(self, **kwargs):
-#        context = super(HomeView, self).get_context_data(**kwargs)
-#        context["loggeduser"] = self.request.user.id
-#        context["offers"] = Offer.objects.filter(product_id__user_id = self.request.user.id).order_by('-id')
-#        context["itemcount"] = self.request.GET.get('paginate_by', self.paginate_by)
-#
-#        return context
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        context["loggeduser"] = self.request.user
+
+        return context
 
 class UserFormView(generic.View):
     form_class = UserForm
@@ -155,6 +153,7 @@ class ViewAccount(generic.DetailView):
         context = super().get_context_data(**kwargs)
         context["user_details"] = User_Details.objects.get(user_id=self.object)
         context["user"] = self.object
+        context["loggeduser"] = self.request.user
         
         return context
     
@@ -167,7 +166,7 @@ class SearchView(generic.ListView):
     
     def get_context_data(self, **kwargs):
         context = super(SearchView, self).get_context_data(**kwargs)
-        
+        context["loggeduser"] = self.request.user
         return context
 
 class CategoryView(generic.ListView):
@@ -179,6 +178,7 @@ class CategoryView(generic.ListView):
     
     def get_context_data(self, **kwargs):
         context = super(CategoryView, self).get_context_data(**kwargs)
+        context["loggeduser"] = self.request.user
         
         return context
     
@@ -191,7 +191,7 @@ class CartView(TemplateView):
         
         context["orders"] = Order.objects.filter(cart_id=cart)
         context["cart"] = cart
-        
+        context["loggeduser"] = self.request.user
         
         return context
     

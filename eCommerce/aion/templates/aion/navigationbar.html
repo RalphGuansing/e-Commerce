@@ -15,7 +15,7 @@
 
               <!--PRODUCT MANAGER-->
               <li><a href="{% url 'addproduct' %}">Add Product<i class="small material-icons right">add</i></a></li>
-              <li><a href="#!">My Profile</a></li>
+              <li><a href="{% url 'viewaccount' loggeduser.id %}">My Profile</a></li>
               <li class="divider"></li>
               <li><a href="#!" class="red-text">Log Out<i class="small material-icons right">power_settings_new</i></a></li>
             </ul>
