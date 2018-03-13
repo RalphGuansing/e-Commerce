@@ -157,4 +157,16 @@ class ViewAccount(generic.DetailView):
         context["user"] = self.object
         
         return context
-
+    
+class SearchView(generic.ListView):
+    template_name = 'aion/home.html'
+    context_object_name = 'products'
+    
+    def get_queryset(self):
+        return Product.objects.all().order_by('-id')
+    
+    def get_context_data(self, **kwargs):
+        context = super(SearchView, self).get_context_data(**kwargs)
+        
+        return context
+    
