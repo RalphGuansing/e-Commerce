@@ -3,24 +3,8 @@
 {% block content %}
 
 <!-- This file displays the content of the website -->
+<div class="row main"id="home">
 
-<div class="container" id="about">
-    <div class="row">
-        <div class="carousel">
-            <a class="carousel-item" href="#one!"><img src="{% static "images/watch1.jpg"%}"></a>
-            <a class="carousel-item" href="#two!"><img src="{% static "images/watch2.jpg"%}"></a>
-            <a class="carousel-item" href="#three!"><img src="{% static "images/watch3.jpg"%}"></a>
-            <a class="carousel-item" href="#four!"><img src="{% static "images/watch4.jpg"%}"></a>
-            <a class="carousel-item" href="#five!"><img src="{% static "images/watch5.jpg"%}"></a>
-        </div>
-    </div>
-</div>
-      <div id="contact">
-          Contact
-      </div>
-<br><br>
-<div class=" row main"id="home">
-    
     {% for product in products %}
 <!--
      <div class="row product_post">
@@ -29,7 +13,7 @@
              {% if product.item_photo %}
               <img class="item_photo"src="{{product.item_photo.url}}">
               {% endif %}
-              
+
             </div>
             <div class="card-content">
               <span class="card-title textinpost">{{product.item_name}}</span>
@@ -38,7 +22,7 @@
               <a href="#">$ {{product.item_price}}</a>
             </div>
           </div>
-    
+
       </div>
 -->
         <div class="item product_post">
@@ -59,16 +43,16 @@
           </div>
       </div>
 
-    <div id="product_modal{{product.id}}" class="modal item m_product_details_post card"> 
-    
-         
+    <div id="product_modal{{product.id}}" class="modal item m_product_details_post card">
+
+
             <div class="card-image">
-             
+
               {% if product.item_photo %}
                 <a href="{% url 'viewproduct' product.id %}"><img class="m_item_photo"src="{{product.item_photo.url}}"></a>
               {% endif %}
-              
-              
+
+
             </div>
             <div class="card-content">
               <span class="card-title textinpost"> {{product.item_name}} </span>
@@ -80,13 +64,13 @@
 
       </div>
 
-    
+
     <br>
-    
+
     {% if forloop.counter|divisibleby:5 %}
     <br>
     {% endif %}
-    {% endfor %}    
+    {% endfor %}
     </div>
 <!-- RELOCATE THIS SECTION TO A DIFFERENT FILE LATER -->
 

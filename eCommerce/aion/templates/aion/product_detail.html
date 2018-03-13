@@ -2,14 +2,14 @@
 {% load static %}
 {% block content %}
 
-<div class="main_product_details"> 
+<div class="main_product_details">
         <div class="item product_details_post">
           <div class="card">
             <div class="card-image">
              {% if object.item_photo %}
               <img class="item_photo materialboxed"src="{{product.item_photo.url}}">
               {% endif %}
-              
+
             </div>
             <div class="card-content">
               <span class="card-title">{{object.item_name}}</span>
@@ -17,16 +17,21 @@
             </div>
             <div class="card-action">
               <a href="#">$ {{object.item_price}}</a>
-                
+
                 <!--PRODUCT MANAGER FUNCTIONALITIES-->
+                {% if request.user.is_superuser %}
                 <a href="{% url 'editproduct' object.id %}" class="waves-effect waves-light btn amber right_btn edit_btn">Edit <i class="material-icons right">edit</i></a>
                 <a href="{% url 'deleteproduct' object.id %}" class="waves-effect waves-light btn red darken-3 right_btn">Delete <i class="material-icons right">delete</i></a>
+                {% else %}
+                <a href="{% url 'editproduct' object.id %}" class="waves-effect waves-light btn amber right_btn edit_btn">Review<i class="material-icons right">stars</i></a>
+                <a href="{% url 'editproduct' object.id %}" class="waves-effect waves-light btn red darken-3 right_btn">Add To Cart <i class="material-icons right">shopping_cart</a>
+                {% endif %}
             </div>
           </div>
       </div>
-    
+
     <br>
-    
+
 </div>
 
 

@@ -1,13 +1,11 @@
 {% extends 'navigationbar.html' %}
-{% load material_form %} 
+{% load material_form %}
 {% block content %}
 <div class="register_div">
 <div class="inner_register">
 <div class="col s12">
   <div class="card-panel">
-    <div class=" col s12 center">
-        <h3 class="brand-logo center">Add Product</h3>
-    </div>
+<p class="flow-text center">Add Product</p>
 <form action="" method="post" enctype="multipart/form-data">
 	{% csrf_token %}
     {% form form=form %}{% endform %}
