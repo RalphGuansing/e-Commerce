@@ -15,15 +15,21 @@
 
               <!--PRODUCT MANAGER-->
               <li><a href="{% url 'addproduct' %}">Add Product<i class="small material-icons right">add</i></a></li>
+                {% if loggeduser.is_authenticated %}
               <li><a href="{% url 'viewaccount' loggeduser.id %}">My Profile</a></li>
+                {% endif %}
               <li class="divider"></li>
-              <li><a href="#!" class="red-text">Log Out<i class="small material-icons right">power_settings_new</i></a></li>
+              <li><a href="{% url 'logout' %}" class="red-text">Log Out<i class="small material-icons right">power_settings_new</i></a></li>
             </ul>
             <nav class="nav-extended grey darken-4">
                 <div class="container nav-wrapper">
                         <a href="{% url 'home' %}" class="brand-logo yellow-text text-darken-3 center">Aion Wristwatches</a>
                         <ul id="nav-mobile" class="right hide-on-med-and-down">
+                            {% if loggeduser.is_authenticated %}
                             <li><a class="dropdown-button yellow-text text-darken-3" href="#!" data-activates="dropdown1"><i class="large material-icons">person</i></a></li>
+                            
+                            <li><a class=" yellow-text text-darken-3" href="{% url 'cart' %}"><i class="large material-icons">shopping_cart</i></a></li>
+                            {% endif %}
                       </ul>
 
                 </div>

@@ -6,6 +6,7 @@ from django.views import generic
 from aion.forms import *
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from .models import *
+from django.contrib.auth.decorators import login_required
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
@@ -181,7 +182,7 @@ class CategoryView(generic.ListView):
         context["loggeduser"] = self.request.user
         
         return context
-    
+
 class CartView(TemplateView):
     template_name = 'aion/cart.html'
     
@@ -201,4 +202,15 @@ class CartView(TemplateView):
         
         context["totalsum"] = totalsum
         return context
+    
+def delete_order(request, pk):
+    order = Order.objects.get(pk=pk)
+    order.delete()
+    return HttpResponseRedirect('/cart/')
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect('/login/')
+    
+    
     

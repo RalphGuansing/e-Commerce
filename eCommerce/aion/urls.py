@@ -8,6 +8,7 @@ urlpatterns = [
     path('category/<slug:category>/', views.CategoryView.as_view(), name='category'),
     path('search/', views.SearchView.as_view(), name='search'),
     path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
     path('addproduct/', views.CreateProductView.as_view(), name='addproduct'),
     path('product/<int:pk>/edit/', views.EditProductView.as_view(), name='editproduct'),
     path('product/<int:pk>/delete/', views.DeleteProductView.as_view(), name='deleteproduct'),
@@ -16,4 +17,5 @@ urlpatterns = [
     path('user/<int:pk>/', views.ViewAccount.as_view(), name='viewaccount'),
     path('register/', views.UserFormView.as_view(), name='register'),
     path('cart/', views.CartView.as_view(), name='cart'),
+    path('cart/order/<int:pk>/delete', views.delete_order, name='delete-order'),
     ]
