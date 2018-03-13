@@ -1,0 +1,21 @@
+{% extends 'navigationbar.html' %}
+{% load static %}
+{% block content %}
+<!-- This file displays the content of the website -->
+
+<div class="container" id="about">
+    <div class="row">
+        <div class="carousel">
+            <a class="carousel-item" href="#one!"><img src="{% static "images/watch1.jpg"%}"></a>
+            <a class="carousel-item" href="#two!"><img src="{% static "images/watch2.jpg"%}"></a>
+            <a class="carousel-item" href="#three!"><img src="{% static "images/watch3.jpg"%}"></a>
+            <a class="carousel-item" href="#four!"><img src="{% static "images/watch4.jpg"%}"></a>
+            <a class="carousel-item" href="#five!"><img src="{% static "images/watch5.jpg"%}"></a>
+        </div>
+    </div>
+</div>
+      <div id="contact">
+          Contact
+      </div>
+</div>
+{% endblock %}

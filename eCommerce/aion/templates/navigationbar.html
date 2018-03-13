@@ -1,0 +1,45 @@
+{% load static %}
+<html>
+    <head>
+        <!-- For fonts -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <!--Import jQuery before materialize.js-->
+    </head>
+    <body>
+        <!-- This is the code for the navigation bar -->
+        <div class="row navbar-fixed z-depth-3">
+            <nav class="nav-extended grey darken-4">
+                <div class="container nav-wrapper">
+                        <a href="{% url 'home' %}" class="brand-logo yellow-text text-darken-3 center">Aion Wristwatches</a>
+                        <ul id="nav-mobile" class="right hide-on-med-and-down">
+                            <li><a href="#" class="yellow-text text-darken-3"><i class="large material-icons">person</i></a></li>
+                      </ul>
+                </div>
+
+            <div class="container nav-content indicator col s6 offset-s7">
+              <ul class="tabs tabs-transparent">
+                <li class="tab"><a href="#about" class="active yellow-text text-darken-3 center-align" >About us</a></li>
+                <li class="tab"><a href="#contact" class="yellow-text text-darken-3 center-align" >Contact</a></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+        {% block content %}
+        {% endblock %}
+    </body>
+
+    <!-- Importing dependencies (Materialize, JQuery etc.) Might change to static files soon -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash|Nanum+Myeongjo|Noticia+Text|Spectral+SC" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "css/home.css" %}" />
+    <!-- For initialization of componenents -->
+    <script type="text/javascript">
+          $(document).ready(function(){
+            $('.carousel').carousel();
+           });
+      </script>
+</html>
