@@ -182,3 +182,16 @@ class CategoryView(generic.ListView):
         
         return context
     
+class CartView(TemplateView):
+    template_name = 'aion/cart.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(CartView, self).get_context_data(**kwargs)
+        cart = Cart.objects.filter(user_id=self.request.user,isPurchased=False)
+        
+        context["orders"] = Order.objects.filter(cart_id=cart)
+        context["cart"] = cart
+        
+        
+        return context
+    
