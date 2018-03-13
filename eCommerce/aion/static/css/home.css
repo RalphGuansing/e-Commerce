@@ -5,7 +5,7 @@
 
 /*
 html{
-    font-family: 'Spectral SC', serif;
+    font-family: 'Dosis', serif;
 }
 */
 
@@ -15,6 +15,7 @@ body{
 
 .brand-logo{
     font-family: "Berkshire Swash";
+    font-size: 10em;
 }
 
 /* label color */
@@ -30,6 +31,8 @@ body{
  border-bottom: 1px solid black;
  box-shadow: 0 1px 0 0 black;
 }
+<<<<<<< HEAD
+=======
 
 nav ul li:hover {
    background-color: #e0f2f1;
@@ -43,7 +46,7 @@ nav ul li:hover {
     background-color: gainsboro;
     padding-right:5px;
     padding-left:5px;
-    
+
 }
 
 .textinpost{
@@ -74,14 +77,14 @@ img.item_photo{
     flex-wrap: wrap;
     padding-right:5px;
     padding-left:5px;
-    
+
 }
 
 .login_div{
     width:30%;
     padding: 2%;
-    padding-top: 13%; 
-    
+    padding-top: 13%;
+
 }
 
 .login_btn{
@@ -181,7 +184,7 @@ img.m_item_photo{
 
 .inner_register{
   width: 66%;
-  margin: auto;  
+  margin: auto;
   position: absolute;
   left:0;
   right: 0;
@@ -208,3 +211,7 @@ select{
 
 
 
+<<<<<<< HEAD
+>>>>>>> Product-Purchase
+=======
+>>>>>>> Product-Purchase
