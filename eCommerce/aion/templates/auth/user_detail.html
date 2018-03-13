@@ -1,0 +1,69 @@
+{% extends 'aion/navigationbar.html' %}
+{% load static %}
+{% block content %}
+<div class="main_product_details">
+    <div class="item user_details_post">
+<div id="profile-page-header" class="card ">
+
+                <div class="card-image waves-effect waves-block waves-light prof_background">
+                  <img class="activator" src="https://quickwebresources.com/wp-content/uploads/2015/05/material-design.jpg" alt="user background">
+                </div>
+                <figure class="card-profile-image">
+                  <img src="https://www.sonypark360.net/wp-content/uploads/2017/08/profile-pictures.png" alt="profile image" class=" circle z-depth-2 responsive-img activator gradient-45deg-light-blue-cyan gradient-shadow" >
+                </figure>
+
+                <div class="card-content">
+                  <div class="row pt-2">
+                    <div class="col s12 m3 offset-m2">
+                      <h4 class="card-title grey-text text-darken-4">{{ user.username }}</h4>
+                      <p class="medium-small grey-text">{{ user_details.account_type }}</p>
+                    </div>
+<!--
+                    <div class="col s12 m2 center-align">
+                      <h4 class="card-title grey-text text-darken-4">10+</h4>
+                      <p class="medium-small grey-text">Work Experience</p>
+                    </div>
+                    <div class="col s12 m2 center-align">
+                      <h4 class="card-title grey-text text-darken-4">6</h4>
+                      <p class="medium-small grey-text">Completed Projects</p>
+                    </div>
+-->
+<!--
+                    <div class="col s12 m2 center-align">
+                      <h4 class="card-title grey-text text-darken-4">$ 1,253,000</h4>
+                      <p class="medium-small grey-text">Busness Profit</p>
+                    </div>
+-->
+                    <div class="col s12 m11 offset-m1 right-align">
+                      <a class="btn-floating activator waves-effect waves-light rec accent-2 right">
+                        <i class="material-icons">perm_identity</i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-reveal">
+                  <p>
+                    <span class="card-title grey-text text-darken-4">{{ user_details.first_name }} {{ user_details.last_name }}
+                      <i class="material-icons right">close</i>
+                    </span>
+                    <span>
+                      <i class="material-icons cyan-text text-darken-2">perm_identity</i>{{user_details.account_type}} </span>
+                  </p>
+<!--
+                  <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
+                  <p>
+                    <i class="material-icons cyan-text text-darken-2">perm_phone_msg</i> +1 (612) 222 8989</p>
+-->
+                  <p>
+                    <i class="material-icons cyan-text text-darken-2">email</i> {{ user.email }}</p>
+<!--
+                  <p>
+                    <i class="material-icons cyan-text text-darken-2">cake</i> 18th June 1990</p>
+                  <p>
+                    <i class="material-icons cyan-text text-darken-2">airplanemode_active</i> BAR - AUS</p>
+-->
+                </div>
+              </div>
+        </div>
+</div>
+{% endblock %}

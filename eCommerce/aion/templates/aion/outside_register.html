@@ -1,0 +1,33 @@
+<html>
+<head>
+    <title>Aion Watches</title>
+    {% load staticfiles %}
+    <!-- Importing dependencies (Materialize, JQuery etc.) Might change to static files soon -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash|Nanum+Myeongjo|Noticia+Text|Spectral+SC" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" />
+    <!-- For initialization of componenents -->
+</head>
+<body class="login_body">
+<!--
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+            </div>
+            
+            <div class="collapse navbar-collapse" id="topNavBar">
+                <ul class="nav navbar-nav navbar-right">
+                </ul>
+            </div>
+        </div>
+    </nav>
+-->
+    
+<div class="register_div">
+    {% block body%}
+    {% endblock %}
+</div>
+</body>
+</html>

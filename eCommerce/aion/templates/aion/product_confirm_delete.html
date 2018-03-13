@@ -1,0 +1,23 @@
+{% extends 'aion/outside.html' %}
+
+{% block body%}
+    <div class="centerdiv">
+        <div class="innerdiv">
+        <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="hoverable">
+                <div class="card">
+                <div class="card-content">
+                    Are You sure you want to delete:<p class="">"{{ object.item_name }}"?</p>
+                    </div>
+                <div class="card-action">
+                    <button type="submit" class="btn" value="">Yes</button>
+                    <a href="{% url 'viewproduct' object.id %}" class="btn">No</a>
+                </div>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+{% endblock %}
