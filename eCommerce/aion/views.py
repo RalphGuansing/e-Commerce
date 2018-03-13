@@ -93,7 +93,7 @@ def login_view(request):
 		password = form.cleaned_data.get("password")
 		user= authenticate(username=username, password=password)
 		login(request,user)
-		return HttpResponseRedirect('/home/')
+		return HttpResponseRedirect('/')
 	return render(request, "aion/login.html",{"form":form, "title": title})
 
 #Add Product
@@ -187,11 +187,18 @@ class CartView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super(CartView, self).get_context_data(**kwargs)
-        cart = Cart.objects.filter(user_id=self.request.user,isPurchased=False)
+        cart = Cart.objects.get(user_id=self.request.user,isPurchased=False)
+        orders = Order.objects.filter(cart_id=cart)
         
-        context["orders"] = Order.objects.filter(cart_id=cart)
+        context["orders"] = orders
         context["cart"] = cart
         context["loggeduser"] = self.request.user
         
+        totalsum = 0;
+        
+        for order in orders:
+            totalsum += order.item_quantity * order.product_id.item_price
+        
+        context["totalsum"] = totalsum
         return context
     

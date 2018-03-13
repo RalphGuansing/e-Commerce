@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'crispy_forms_materialize',
     'material',
     'material.frontend',
+    'mathfilters',
     
 ]
 
