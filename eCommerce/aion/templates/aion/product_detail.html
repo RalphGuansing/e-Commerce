@@ -13,7 +13,12 @@
             </div>
             <div class="card-content">
               <span class="card-title">{{object.item_name}}</span>
-              <span class="card-title"><a href="#">{{object.item_type_slug}}</a></span>
+              <span class="card-title"><strong>Category: </strong><a href="#">{{object.item_type}}</a></span>
+                <p><strong>Quantity: </strong>{{object.item_quantity}}</p>
+                <strong>Description:</strong> 
+                <p>{{ object.item_description|linebreaks }}</p>
+                
+                
             </div>
             <div class="card-action">
               <a href="#">$ {{object.item_price}}</a>
