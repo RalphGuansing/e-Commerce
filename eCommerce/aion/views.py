@@ -163,7 +163,7 @@ class SearchView(generic.ListView):
     context_object_name = 'products'
     
     def get_queryset(self):
-        return Product.objects.all().order_by('-id')
+        return Product.objects.filter(item_name__icontains=self.request.GET.get("search_input", None)).order_by('-id')
     
     def get_context_data(self, **kwargs):
         context = super(SearchView, self).get_context_data(**kwargs)

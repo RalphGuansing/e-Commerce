@@ -15,8 +15,9 @@
 
               <!--PRODUCT MANAGER-->
               <li><a href="{% url 'addproduct' %}">Add Product<i class="small material-icons right">add</i></a></li>
-              <li class="divider"></li>
               <li><a href="#!">My Profile</a></li>
+              <li class="divider"></li>
+              <li><a href="#!" class="red-text">Log Out<i class="small material-icons right">power_settings_new</i></a></li>
             </ul>
             <nav class="nav-extended grey darken-4">
                 <div class="container nav-wrapper">
@@ -35,7 +36,7 @@
                   
               </ul>
                 
-                <form class="navbar-form navbar-left" role="search" method="get" action="">
+                <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'search' %}">
                     <div class="form-group">
                         <input type="text" class="form-control" name="search_input" id="searchtag">
                     </div>
