@@ -66,3 +66,12 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('home')
+
+class Review(models.Model):
+    user_Id = models.ForeignKey(User, on_delete=models.CASCADE)
+    product_Id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    commentText = models.CharField(max_length=250)
+    stars = models.DecimalField(max_digits=2, decimal_places=1)
+
+    def __str__(self):
+        return str(self.productId) + ", " +self.commentText + ", " + str(self.stars)
