@@ -78,7 +78,7 @@ class UserFormView(generic.View):
                 
                 if user.is_active:
                     login(request,user)
-                    return HttpResponseRedirect('/home/')
+                    return HttpResponseRedirect('/')
             
             
                 

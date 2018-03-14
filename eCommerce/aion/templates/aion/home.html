@@ -9,6 +9,14 @@
     <div class="col s2"></div>
     <div class="col s1">
     <ul>
+    <li>                <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'search' %}">
+                    <div class="form-group input-field">
+                        
+                        <label for="id_search" class="">Search</label>
+                        <input type="text" class="form-control" name="search_input" id="searchtag" required id="id_search">
+                    </div>
+<!--                    <button type="submit" class="btn btn-default">Search</button>-->
+                </form></li>
     <li><a href="{% url 'home'  %}" class="orange-text text-lighten-1 category_watch">SHOP ALL</a></li>
     <li><a href="{% url 'category' 'analog-watch' %}" class="orange-text text-lighten-1 category_watch">ANALOG WATCH</a></li>
     <li><a href="{% url 'category' 'digital-watch' %}" class="orange-text text-lighten-1 category_watch">DIGITAL WATCH</a></li>
