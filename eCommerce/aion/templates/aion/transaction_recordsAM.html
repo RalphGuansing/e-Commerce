@@ -23,14 +23,17 @@
         
     <table id="transaction_id" class="highlight">
     <tr>
+        <th></th>
         <th onclick="sortTable(0)"><a class ="deep-orange-text text-darken-3" style="cursor: pointer;">USER</a></th>
         <th onclick="sortTable(1)"><a class ="deep-orange-text text-darken-3" style="cursor: pointer;">DATE</a></th>
         <th onclick="sortTable(2)"><a class ="deep-orange-text text-darken-3" style="cursor: pointer;">AMOUNT</a></th>
     </tr>
     {% for cart in cart_array %}
     <tr>
-        <td><a class="orange-text text-darken-4" href="{% url 'usertransactionsAM' cart.cart_id.user_id.id %}"><i class="small material-icons">book</i></a> <a class="orange-text text-darken-4"href="{% url 'viewaccount' cart.cart_id.user_id.id %}">{{ cart.cart_id.user_id.username }}</a></td>
-        <td>{{ cart.cart_id.date_created|date:"mdY" }}{{ cart.cart_id.time_created|time:"Hi" }}</td>
+        <td><a href="{% url 'amcart' cart.cart_id.id %}"><i class="small material-icons">shopping_cart</i></a><a class="orange-text text-darken-4" href="{% url 'usertransactionsAM' cart.cart_id.user_id.id %}"><i class="small material-icons">book</i></a></td>
+        <td> <a class="orange-text text-darken-4"href="{% url 'viewaccount' cart.cart_id.user_id.id %}">{{ cart.cart_id.user_id.username }}</a></td>
+        <td value="{{ cart.cart_id.date_created|date:'mdY' }}{{ cart.cart_id.time_created|time:'Hi' }}">
+            {{ cart.cart_id.date_created|date:'M d, Y' }}, {{ cart.cart_id.time_created|time:'H:i' }}</td>
         <td>$ {{ cart.totalsum }}</td>
     </tr>
     

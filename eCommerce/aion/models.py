@@ -88,5 +88,12 @@ class Order(models.Model):
 class Review(models.Model):
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
     product_id = models.ForeignKey(Product,on_delete=models.CASCADE)
-    commentText = models.CharField(max_length=250)
-    stars = models.DecimalField(max_digits=2, decimal_places=1)
+    commentText = models.TextField(default='')
+    stars = models.DecimalField(max_digits=2, decimal_places=1, default=1)
+    
+    def get_absolute_url(self):
+        return reverse('home')
+    
+    
+    def get_absolute_url(self):
+        return reverse('viewproduct', args=[str(self.product_id.id)])

@@ -131,6 +131,7 @@ class UserFormView(generic.View):
             password = form1.cleaned_data['password']
             user.set_password(password)
             user.save()
+            user.groups.add(Group.objects.get(name='Customer'))
 
 
             user_details = form2.save(commit=False)
@@ -157,6 +158,37 @@ class UserFormView(generic.View):
 
         return render(request, self.template_name,{'form1':form1,'form2':form2,'form3':form3, 'form4':form4, "title": self.title})
 
+def user_edit(request, pk):
+
+    if request.method == 'POST':
+        user_details = User_Details.objects.get(user_id=request.user)
+        form1 = UpdateUserForm(request.POST, instance=request.user)
+        form2 = UserDetailsForm(request.POST, instance=user_details)
+        form3 = AddressDetailsForm(request.POST, instance=user_details.billing_address)
+        form4 = AddressDetailsForm(request.POST, instance=user_details.shipping_address)
+
+        if all([form1.is_valid(), form2.is_valid(), form3.is_valid(), form4.is_valid()]):
+            user = form1.save()
+            user_details = form2.save(commit=False)
+            billing_address = form3.save()
+            shipping_address = form4.save()
+            
+            user_details.billing_address = billing_address
+            user_details.shipping_address = shipping_address
+            user_details.save()
+
+            return HttpResponseRedirect('/user/'+str(request.user.id)+'/')
+
+    else:
+        user_details = User_Details.objects.get(user_id=request.user)
+        form1 = UpdateUserForm( instance=request.user)
+        form2 = UserDetailsForm( instance=user_details)
+        form3 = AddressDetailsForm( instance=user_details.billing_address)
+        form4 = AddressDetailsForm( instance=user_details.shipping_address)
+
+    return render(request, 'aion/register.html', {
+        'form1':form1,'form2':form2,'form3':form3, 'form4':form4,"title": 'Update'})
+
 def login_view(request):
 	print(request.user)
 	title = "Login"
@@ -178,6 +210,29 @@ class CreateProductView(CreateView):
     def form_valid(self, form):
         form.instance.user_id = self.request.user
         return super(CreateProductView, self).form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super(CreateProductView, self).get_context_data(**kwargs)
+        context["loggeduser"] = self.request.user
+        #context["post_id"] = Offer.objects.get(id=self.kwargs['offer_id']).post_id.id
+        return context
+
+class CreateReviewView(CreateView):
+    form_class = ReviewForm
+    template_name = 'addreview.html'
+    
+    
+    
+    def form_valid(self, form):
+        form.instance.user_id = self.request.user
+        form.instance.product_id = Product.objects.get(id=self.kwargs['pk'])
+        return super(CreateReviewView, self).form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super(CreateReviewView, self).get_context_data(**kwargs)
+        context["loggeduser"] = self.request.user
+        #context["post_id"] = Offer.objects.get(id=self.kwargs['offer_id']).post_id.id
+        return context
 
 #Edit Product
 class EditProductView(generic.UpdateView):
@@ -220,6 +275,10 @@ class ViewProduct(generic.DetailView):
         context = super().get_context_data(**kwargs)
         context["loggeduser"] = self.request.user
         context["request"] = self.request
+        context["reviews"] = Review.objects.filter(product_id = self.object)
+        
+        
+        
         return context
 
 class ViewAccount(generic.DetailView):
@@ -229,6 +288,7 @@ class ViewAccount(generic.DetailView):
         context["user_details"] = User_Details.objects.get(user_id=self.object)
         context["user"] = self.object
         context["loggeduser"] = self.request.user
+        context["reviews"] = Review.objects.filter(user_id = self.object)
 
         return context
 
@@ -264,6 +324,28 @@ class CartView(TemplateView):
         context = super(CartView, self).get_context_data(**kwargs)
         try:
             cart = Cart.objects.get(user_id=self.request.user,isPurchased=False)
+        except Cart.DoesNotExist:
+            cart = None
+        orders = Order.objects.filter(cart_id=cart)
+
+        context["orders"] = orders
+        context["cart"] = cart
+        context["loggeduser"] = self.request.user
+
+        totalsum = 0;
+
+        for order in orders:
+            totalsum += order.item_quantity * order.product_id.item_price
+
+        context["totalsum"] = totalsum
+        return context
+class AMCartView(TemplateView):
+    template_name = 'aion/amcart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AMCartView, self).get_context_data(**kwargs)
+        try:
+            cart = Cart.objects.get(id=self.kwargs['pk'],isPurchased=True)
         except Cart.DoesNotExist:
             cart = None
         orders = Order.objects.filter(cart_id=cart)
@@ -363,6 +445,7 @@ class TransactionView(TemplateView):
         carts = Cart.objects.filter(user_id=self.request.user,isPurchased=True).order_by('-id')
 #        carts = Cart.objects.filter(user_id=self.request.user,isPurchased=True)
         cart_array=[]
+        cart_items = {}
 
         for cart in carts:
             cart_items = {}

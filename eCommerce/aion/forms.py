@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from django.forms import modelformset_factory
 from django.db.models import Q
 from .models import *
 from django import forms
@@ -29,6 +30,12 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('username','password','email')
 
+class UpdateUserForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ('username','email')
+
 class UserDetailsForm(forms.ModelForm):
 
     class Meta:
@@ -41,6 +48,24 @@ class AddressDetailsForm(forms.ModelForm):
     class Meta:
         model = Address_Details
         exclude = ('user_id', 'address_type')
+
+class ReviewForm(forms.ModelForm):
+
+    class Meta:
+        model = Review
+        exclude = ('user_id', 'product_id', 'stars')
+
+#AddressFormSet = forms.modelformset_factory(
+#    Address_Details,
+#    form=AddressDetailsForm,
+#    extra=2,
+#                                           )
+
+#AddressInlineFormSet = forms.modelformset_factory(
+#    Address_Details,
+#    form=AddressDetailsForm,
+#    extra2,
+#                                           )
 
 class UserLoginForm(forms.Form):
     User = get_user_model()

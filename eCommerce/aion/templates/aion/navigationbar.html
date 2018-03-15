@@ -50,7 +50,9 @@
                             <li><a class="dropdown-button yellow-text text-darken-3" href="#!" data-activates="dropdown1"><i class="large material-icons">person</i></a></li>
 
                             {% if loggeduser.is_authenticated %}
+                            {% if loggeduser|has_group:"Customer"%}
                             <li><a class=" yellow-text text-darken-3" href="{% url 'cart' %}"><i class="large material-icons">shopping_cart</i></a></li>
+                            {% endif %}
                             {% endif %}
 
 
