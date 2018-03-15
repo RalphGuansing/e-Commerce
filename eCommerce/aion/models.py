@@ -14,7 +14,7 @@ class Address_Details(models.Model):
 
     #(House #, Street, Subdivision, City, Postal Code, Country)
     def __str__(self):
-        return '('+ self.house_number +', '+ self.street +', '+ self.subdivision +', '+ self.city +', '+ str(self.postal_code) +', '+ self.country +')'
+        return ''+ self.house_number +', '+ self.street +', '+ self.subdivision +', '+ self.city +', '+ str(self.postal_code) +', '+ self.country +''
 
     class Meta:
         verbose_name_plural = "Address_Details"
@@ -87,5 +87,3 @@ class Review(models.Model):
     product_id = models.ForeignKey(Product,on_delete=models.CASCADE)
     commentText = models.CharField(max_length=250)
     stars = models.DecimalField(max_digits=2, decimal_places=1)
-    
-    

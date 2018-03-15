@@ -17,6 +17,9 @@ body{
     font-family: "Berkshire Swash";
 }
 
+.homeClass{
+    font-family: "Josefin Sans";
+}
 /* label color */
 .input-field label {
  color: black;
@@ -43,7 +46,7 @@ nav ul li:hover {
 /*    background-color: gainsboro;*/
     padding-right:5px;
     padding-left:5px;
-    
+
 }
 
 .textinpost{
@@ -74,14 +77,14 @@ img.item_photo{
     flex-wrap: wrap;
     padding-right:5px;
     padding-left:5px;
-    
+
 }
 
 .login_div{
     width:30%;
     padding: 2%;
-    padding-top: 13%; 
-    
+    padding-top: 13%;
+
 }
 
 .login_btn{
@@ -181,7 +184,7 @@ img.m_item_photo{
 
 .inner_register{
   width: 66%;
-  margin: auto;  
+  margin: auto;
   position: absolute;
   left:0;
   right: 0;
@@ -206,9 +209,6 @@ select{
        left: 5px;
 }
 
-.category_watch:visited,.category_watch:hover,.category_watch:active { 
+.category_watch:visited,.category_watch:hover,.category_watch:active {
     font-weight: bold;
 }
-
-
-
