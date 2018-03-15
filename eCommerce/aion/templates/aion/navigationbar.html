@@ -1,4 +1,5 @@
 {% load static %}
+{% load aion_extras %}
 <html>
     <head>
         <!-- For fonts -->
@@ -16,17 +17,30 @@
 
                 {% if loggeduser.is_authenticated %}
               <!--PRODUCT MANAGER-->
+                {% if loggeduser|has_group:"Product Manager"%}
               <li><a href="{% url 'addproduct' %}">Add Product<i class="small material-icons right">add</i></a></li>
               <li class="divider"></li>
+                {% endif %}
+                
+                {% if loggeduser|has_group:"Accounting Manager"%}
+              <li><a href="{% url 'transactionsAM' %}">Transactions<i class="small material-icons right">book</i></a></li>
+              <li class="divider"></li>
+                {% endif %}
+                
+                <!-- Profile -->
               <li><a href="{% url 'viewaccount' loggeduser.id %}">My Profile</a></li>
               <li class="divider"></li>
+                
+                {% if loggeduser|has_group:"Customer"%}
               <li><a href="{% url 'transactions' %}">Purchase History</a></li>
               <li class="divider"></li>
+                {% endif %}
+                
               <li><a href="{% url 'logout' %}" class="red-text">Log Out<i class="small material-icons right">power_settings_new</i></a></li>
+                
                 {% else %}
               <li><a href="{% url 'login' %}">Login</a></li>
               <li><a href="{% url 'register' %}">Sign up</a></li>
-
                 {% endif %}
             </ul>
             <nav class="nav-extended grey darken-4">
@@ -60,7 +74,9 @@
         {% block content %}
         {% endblock %}
     </body>
-
+    
+    {% block script %}
+    {% endblock %}
     <!-- Importing dependencies (Materialize, JQuery etc.) Might change to static files soon -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash|Nanum+Myeongjo|Noticia+Text|Spectral+SC" rel="stylesheet">

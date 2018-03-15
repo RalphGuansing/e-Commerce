@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from autoslug import AutoSlugField
-
+from datetime import datetime
 
 class Address_Details(models.Model):
     house_number = models.CharField(max_length=200)
@@ -69,6 +69,9 @@ class Product(models.Model):
 
 class Cart(models.Model):
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    date_created = models.DateField(default=datetime.now,blank=True) 
+    time_created = models.TimeField(default=datetime.now,blank=True) 
+    #date_modified = models.DateField(auto_now=True, auto_now_add=False, null=True) 
     isPurchased = models.BooleanField(default=False)
 
     def __str__(self):

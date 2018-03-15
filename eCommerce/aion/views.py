@@ -270,10 +270,16 @@ class CheckoutView(TemplateView):
 def PlacedOrder(request):
     userid = request.user
     cart = Cart.objects.get(user_id=userid, isPurchased=False)
+    cart.date_created
     cart.isPurchased = True
     cart.save()
 
     return HttpResponseRedirect("/")
+
+
+#by date
+#by user
+#by amount
 
 class TransactionView(TemplateView):
     template_name= 'aion/transaction_records.html'
@@ -281,13 +287,14 @@ class TransactionView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(TransactionView, self).get_context_data(**kwargs)
 
-        carts = Cart.objects.filter(user_id=self.request.user,isPurchased=True)
+        carts = Cart.objects.filter(user_id=self.request.user,isPurchased=True).order_by('-id')
 #        carts = Cart.objects.filter(user_id=self.request.user,isPurchased=True)
         cart_array=[]
 
         for cart in carts:
             cart_items = {}
             cart_items['cart_id'] = cart.id
+            cart_items['date_created'] = cart.date_created
             cart_items['orders'] = Order.objects.filter(cart_id=cart)
 
             cart_items['totalsum'] = 0
@@ -302,3 +309,97 @@ class TransactionView(TemplateView):
         context["loggeduser"] = self.request.user
 
         return context
+    
+    
+class AMTransactionView(TemplateView):
+    template_name= 'aion/transaction_recordsAM.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AMTransactionView, self).get_context_data(**kwargs)
+
+        carts = Cart.objects.filter(isPurchased=True).order_by('-id')
+        cart_array=[]
+
+        for cart in carts:
+            cart_items = {}
+            cart_items['cart_id'] = cart
+            cart_items['date_created'] = cart.date_created
+            cart_items['orders'] = Order.objects.filter(cart_id=cart)
+
+            cart_items['totalsum'] = 0
+            for order in cart_items['orders']:
+                cart_items['totalsum'] += order.item_quantity * order.product_id.item_price
+            cart_array.append(cart_items)
+
+
+        context["carts"] = carts
+        context["users"] = User.objects.all()
+        context["cart_array"] = cart_array
+        context["cart_items"] = cart_items
+        context["loggeduser"] = self.request.user
+
+        return context
+    
+class AMUser_TransactionView(TemplateView):
+    template_name= 'aion/transaction_recordsAM.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AMUser_TransactionView, self).get_context_data(**kwargs)
+
+        carts = Cart.objects.filter(user_id__id=self.kwargs['pk'],isPurchased=True).order_by('-id')
+        cart_array=[]
+        cart_items = {}
+
+        for cart in carts:
+            cart_items = {}
+            cart_items['cart_id'] = cart
+            cart_items['date_created'] = cart.date_created
+            cart_items['time_created'] = cart.time_created
+            cart_items['orders'] = Order.objects.filter(cart_id=cart)
+
+            cart_items['totalsum'] = 0
+            for order in cart_items['orders']:
+                cart_items['totalsum'] += order.item_quantity * order.product_id.item_price
+            cart_array.append(cart_items)
+
+
+        context["carts"] = carts
+        context["users"] = User.objects.all()
+        context["cart_array"] = cart_array
+        
+    
+        context["cart_items"] = cart_items
+        
+        context["loggeduser"] = self.request.user
+
+        return context
+
+#class sort_user_AMTransactionView(TemplateView):
+#    template_name= 'aion/transaction_recordsAM.html'
+#
+#    def get_context_data(self, **kwargs):
+#        context = super(sort_user_AMTransactionView, self).get_context_data(**kwargs)
+#
+#        carts = Cart.objects.filter(isPurchased=True).order_by('-user_id')
+#        cart_array=[]
+#
+#        for cart in carts:
+#            cart_items = {}
+#            cart_items['cart_id'] = cart
+#            cart_items['date_created'] = cart.date_created
+#            cart_items['orders'] = Order.objects.filter(cart_id=cart)
+#
+#            cart_items['totalsum'] = 0
+#            for order in cart_items['orders']:
+#                cart_items['totalsum'] += order.item_quantity * order.product_id.item_price
+#            cart_array.append(cart_items)
+#
+#
+#        context["carts"] = carts
+#        context["users"] = User.objects.all()
+#        context["cart_array"] = cart_array
+#        context["cart_items"] = cart_items
+#        context["loggeduser"] = self.request.user
+#
+#        return context
+    

@@ -16,7 +16,7 @@
                   <div class="row pt-2">
                     <div class="col s12 m3 offset-m2">
                       <h4 class="card-title grey-text text-darken-4">{{ user.username }}</h4>
-                      <p class="medium-small grey-text">{{ user_details.account_type }}</p>
+                      <p class="medium-small grey-text">{{ user.groups.all.0 }}</p>
                     </div>
 <!--
                     <div class="col s12 m2 center-align">
@@ -47,7 +47,7 @@
                       <i class="material-icons right">close</i>
                     </span>
                     <span>
-                      <i class="material-icons cyan-text text-darken-2">perm_identity</i>{{user_details.account_type}} </span>
+                      <i class="material-icons cyan-text text-darken-2">perm_identity</i>{{ user.groups.all.0 }} </span>
                   </p>
 <!--
                   <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>

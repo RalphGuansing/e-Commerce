@@ -21,6 +21,8 @@ urlpatterns = [
     path('cart/', views.CartView.as_view(), name='cart'),
     path('cart/order/<int:pk>/delete', views.delete_order, name='delete-order'),
     path('transactions/', views.TransactionView.as_view(), name='transactions'),
+    path('AM/transactions/', views.AMTransactionView.as_view(), name='transactionsAM'),
+    path('AM/transactions/user/<int:pk>/', views.AMUser_TransactionView.as_view(), name='usertransactionsAM'),
     path('checkout/',views.CheckoutView.as_view(), name='checkout'),
     path('checkout/submit/', views.PlacedOrder, name = "placedorder"),
     ]
