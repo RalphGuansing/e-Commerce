@@ -87,3 +87,5 @@ class Review(models.Model):
     product_id = models.ForeignKey(Product,on_delete=models.CASCADE)
     commentText = models.CharField(max_length=250)
     stars = models.DecimalField(max_digits=2, decimal_places=1)
+    
+    

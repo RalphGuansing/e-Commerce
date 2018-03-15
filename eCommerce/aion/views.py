@@ -189,7 +189,10 @@ class CartView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super(CartView, self).get_context_data(**kwargs)
-        cart = Cart.objects.get(user_id=self.request.user,isPurchased=False)
+        try:
+            cart = Cart.objects.get(user_id=self.request.user,isPurchased=False)
+        except Cart.DoesNotExist:
+            cart = None
         orders = Order.objects.filter(cart_id=cart)
         
         context["orders"] = orders
@@ -250,4 +253,15 @@ def logout_view(request):
     return HttpResponseRedirect('/login/')
     
     
+class TransactionView(TemplateView):
+    template_name= 'aion/transaction_records.html'
     
+    def get_context_data(self, **kwargs):
+        context = super(TransactionView, self).get_context_data(**kwargs)
+        carts = Cart.objects.filter(user_id=self.request.user,isPurchased=True).order_by('-id')
+        for cart in carts:
+            cart.orders = Order.objects.filter(cart_id=cart)
+            
+            
+        context["carts"] = carts
+        context["loggeduser"] = self.request.user       

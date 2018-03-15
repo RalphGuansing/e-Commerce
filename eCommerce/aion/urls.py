@@ -20,4 +20,5 @@ urlpatterns = [
     path('register/', views.UserFormView.as_view(), name='register'),
     path('cart/', views.CartView.as_view(), name='cart'),
     path('cart/order/<int:pk>/delete', views.delete_order, name='delete-order'),
+    path('transactions/', views.TransactionView.as_view(), name='transactions'),
     ]
