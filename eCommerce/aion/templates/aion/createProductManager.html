@@ -1,0 +1,59 @@
+{% extends 'aion/navbarAdmin.html' %}
+{% load static %}
+{% load aion_extras %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class = "container">
+    <div class = "row">
+        <h2 class = "col s12 center yellow-text text-darken-3">Create Product Manager</h2>
+    </div>
+    <div class = "row">
+        <form class = "col s12" action = "" method="POST">{% csrf_token %}
+            <div class="row">
+              <div class="input-field col s12">
+                {{ form1.username }}
+                <label for="username" class="">Username</label>
+              </div>
+            </div>
+            <div class = "row">
+                <div class="input-field col s12">
+                  {{ form1.password }}
+                  <label for="password" class="">Password</label>
+                </div>
+            </div>
+            <div class = "row">
+                <div class="input-field col s12">
+                  {{ form1.email }}
+                  <label for="email" class="">Email</label>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="input-field col s4">
+                {{ form2.first_name }}
+                <label for="first_name" class="">First Name</label>
+              </div>
+              <div class="input-field col s4">
+                {{ form2.middle_name }}
+                <label for="middle_name" class="">Middle Initial</label>
+              </div>
+
+              <div class="input-field col s4">
+                {{ form2.last_name }}
+                <label for="last_name" class="">Last Name</label>
+              </div>
+            </div>
+
+             <div class="row">
+               <div class="input-field col s12">
+                   <center><button class="btn waves-effect waves-light login_btn orange darken-1" type="submit" name="action">{{ title }}</button></center>
+               </div>
+             </div>
+
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

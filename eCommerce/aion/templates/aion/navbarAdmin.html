@@ -28,8 +28,6 @@
                 {% endif %}
 
                 <!-- Profile -->
-              <li><a href="{% url 'viewaccount' loggeduser.id %}">My Profile</a></li>
-              <li class="divider"></li>
 
                 {% if loggeduser|has_group:"Customer"%}
               <li><a href="{% url 'transactions' %}">Purchase History</a></li>
@@ -45,13 +43,10 @@
             </ul>
             <nav class="nav-extended grey darken-4">
                 <div class="container nav-wrapper">
-                        <a href="{% url 'home' %}" class="brand-logo yellow-text text-darken-3 center">Aion Wristwatches</a>
+                        <a href="{% url 'administrator' %}" class="brand-logo yellow-text text-darken-3 center">Aion Wristwatches</a>
                         <ul id="nav-mobile" class="right hide-on-med-and-down">
                             <li><a class="dropdown-button yellow-text text-darken-3" href="#!" data-activates="dropdown1"><i class="large material-icons">person</i></a></li>
 
-                            {% if loggeduser.is_authenticated %}
-                            <li><a class=" yellow-text text-darken-3" href="{% url 'cart' %}"><i class="large material-icons">shopping_cart</i></a></li>
-                            {% endif %}
 
 
                       </ul>
@@ -71,21 +66,8 @@
 
           </nav>
         </div>
-        {% if loggeduser|has_group:"Administrator" %}
-        <div class = "container">
-            <div class = "row center">
-                <h1 class = "row col s12 adminLogoClass"> You are not allowed here Mr. Admin! </h1>
-            </div>
-            <div class = "row center">
-                <a href = "{%url 'administrator' %}"class="waves-effect waves-light btn amber z-depth-3"><i class="material-icons left">lock</i>Click here to return to the Admin Menu</a>
-            </div>
-
-        </div>
-        {% else %}
         {% block content %}
         {% endblock %}
-        {% endif %}
-
     </body>
 
     {% block script %}
@@ -96,6 +78,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" />
+
     <!-- For initialization of componenents -->
     <script type="text/javascript">
     $(document).ready(function() {

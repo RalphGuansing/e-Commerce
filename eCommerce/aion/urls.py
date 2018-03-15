@@ -14,7 +14,6 @@ urlpatterns = [
     path('product/<int:pk>/delete/', views.DeleteProductView.as_view(), name='deleteproduct'),
 
     path('product/<int:pk>/add_to_cart', views.add_to_cart, name='add-to-cart'),
-
     path('product/<int:pk>/', views.ViewProduct.as_view(), name='viewproduct'),
     path('user/<int:pk>/', views.ViewAccount.as_view(), name='viewaccount'),
     path('register/', views.UserFormView.as_view(), name='register'),
@@ -25,4 +24,7 @@ urlpatterns = [
     path('AM/transactions/user/<int:pk>/', views.AMUser_TransactionView.as_view(), name='usertransactionsAM'),
     path('checkout/',views.CheckoutView.as_view(), name='checkout'),
     path('checkout/submit/', views.PlacedOrder, name = "placedorder"),
+    path('administrator/', views.AdminView.as_view(), name='administrator'),
+    path('createProductManager/', views.ProductManagerFormView.as_view(), name='createProductManager'),
+    path('createAccountingManager/', views.AccountingManagerFormView.as_view(), name='createAccountingManager'),
     ]

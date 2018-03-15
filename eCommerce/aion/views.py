@@ -7,6 +7,7 @@ from aion.forms import *
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from .models import *
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User, Group
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
@@ -26,6 +27,78 @@ class HomeView(generic.ListView):
         context["loggeduser"] = self.request.user
 
         return context
+class ProductManagerFormView(generic.View):
+    form_class = ProductManagerForm
+    second_form_class = UserDetailsForm
+    title = "Create Product Manager"
+    template_name = 'aion/createProductManager.html'
+
+    #display blank form
+    def get(self, request):
+        form1 = self.form_class(None)
+        form2 = self.second_form_class(None)
+        return render(request, self.template_name,{'form1':form1,'form2':form2, "title": self.title})
+
+    #process form data
+    def post(self, request):
+        form1 = self.form_class(request.POST)
+        form2 = self.second_form_class(request.POST)
+
+        if form1.is_valid() and form2.is_valid():
+            user = form1.save(commit=False)
+            username = form1.cleaned_data['username']
+            password = form1.cleaned_data['password']
+            email = form1.cleaned_data['email']
+            user.save()
+            g = Group.objects.get(name__contains="Product")
+            g.user_set.add(user)
+            user.set_password(password)
+            g.save()
+
+            user_details = form2.save(commit=False)
+            user_details.user_id = user
+            user_details.save()
+
+
+            return HttpResponseRedirect('/administrator/')
+
+
+class AccountingManagerFormView(generic.View):
+    form_class = AccountingManagerForm
+    second_form_class = UserDetailsForm
+    title = "Create Accounting Manager"
+    template_name = 'aion/createAccountingManager.html'
+
+    #display blank form
+    def get(self, request):
+        form1 = self.form_class(None)
+        form2 = self.second_form_class(None)
+        return render(request, self.template_name,{'form1':form1,'form2':form2, "title": self.title})
+
+    #process form data
+    def post(self, request):
+        form1 = self.form_class(request.POST)
+        form2 = self.second_form_class(request.POST)
+
+        if form1.is_valid() and form2.is_valid():
+            user = form1.save(commit=False)
+            username = form1.cleaned_data['username']
+            password = form1.cleaned_data['password']
+            email = form1.cleaned_data['email']
+            user.save()
+            g = Group.objects.get(name__contains="Accounting")
+            g.user_set.add(user)
+            user.set_password(password)
+            g.save()
+
+            user_details = form2.save(commit=False)
+            user_details.user_id = user
+            user_details.save()
+
+
+            return HttpResponseRedirect('/administrator/')
+
+
 
 class UserFormView(generic.View):
     form_class = UserForm
@@ -309,8 +382,8 @@ class TransactionView(TemplateView):
         context["loggeduser"] = self.request.user
 
         return context
-    
-    
+
+
 class AMTransactionView(TemplateView):
     template_name= 'aion/transaction_recordsAM.html'
 
@@ -339,7 +412,7 @@ class AMTransactionView(TemplateView):
         context["loggeduser"] = self.request.user
 
         return context
-    
+
 class AMUser_TransactionView(TemplateView):
     template_name= 'aion/transaction_recordsAM.html'
 
@@ -366,10 +439,19 @@ class AMUser_TransactionView(TemplateView):
         context["carts"] = carts
         context["users"] = User.objects.all()
         context["cart_array"] = cart_array
-        
-    
+
+
         context["cart_items"] = cart_items
-        
+
+        context["loggeduser"] = self.request.user
+
+        return context
+
+class AdminView(TemplateView):
+    template_name = "aion/admin.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AdminView, self).get_context_data(**kwargs)
         context["loggeduser"] = self.request.user
 
         return context
@@ -402,4 +484,3 @@ class AMUser_TransactionView(TemplateView):
 #        context["loggeduser"] = self.request.user
 #
 #        return context
-    

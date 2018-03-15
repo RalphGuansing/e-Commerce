@@ -20,6 +20,10 @@ body{
 .homeClass{
     font-family: "Josefin Sans";
 }
+.adminLogoClass{
+    font-family: "Josefin Sans";
+    font-size: 3em;
+}
 /* label color */
 .input-field label {
  color: black;
