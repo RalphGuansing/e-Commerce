@@ -258,10 +258,25 @@ class TransactionView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context = super(TransactionView, self).get_context_data(**kwargs)
-        carts = Cart.objects.filter(user_id=self.request.user,isPurchased=True).order_by('-id')
+        
+        carts = Cart.objects.filter(user_id=self.request.user,isPurchased=True)
+#        carts = Cart.objects.filter(user_id=self.request.user,isPurchased=True)
+        cart_array=[]
+    
         for cart in carts:
-            cart.orders = Order.objects.filter(cart_id=cart)
+            cart_items = {}
+            cart_items['cart_id'] = cart.id
+            cart_items['orders'] = Order.objects.filter(cart_id=cart)
             
+            cart_items['totalsum'] = 0
+            for order in cart_items['orders']:
+                cart_items['totalsum'] += order.item_quantity * order.product_id.item_price
+            cart_array.append(cart_items)
             
+
         context["carts"] = carts
-        context["loggeduser"] = self.request.user       
+        context["cart_array"] = cart_array
+        context["cart_items"] = cart_items
+        context["loggeduser"] = self.request.user      
+        
+        return context

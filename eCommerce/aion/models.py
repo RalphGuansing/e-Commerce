@@ -88,4 +88,4 @@ class Review(models.Model):
     commentText = models.CharField(max_length=250)
     stars = models.DecimalField(max_digits=2, decimal_places=1)
     
-    
+   
