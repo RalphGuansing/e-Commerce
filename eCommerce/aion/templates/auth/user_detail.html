@@ -43,7 +43,7 @@
                 </div>
                 <div class="card-reveal">
                   <p>
-                    <span class="card-title grey-text text-darken-4">{{ user_details.first_name }} {{ user_details.last_name }}
+                    <span class="card-title grey-text text-darken-4">{{ user_details.first_name }} {{ user_details.middle_name }} {{ user_details.last_name }}
                       <i class="material-icons right">close</i>
                     </span>
                     <span>
@@ -56,9 +56,9 @@
 -->
                   <p>
                     <i class="material-icons cyan-text text-darken-2">email</i> {{ user.email }}</p>
-<!--
                   <p>
-                    <i class="material-icons cyan-text text-darken-2">cake</i> 18th June 1990</p>
+                      <a href="{% url 'editaccount' object.id %}">Edit Info</a></p>
+<!--
                   <p>
                     <i class="material-icons cyan-text text-darken-2">airplanemode_active</i> BAR - AUS</p>
 -->
