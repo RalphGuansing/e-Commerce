@@ -6,11 +6,13 @@ from django import forms
 from django.contrib.auth import authenticate, login, logout, get_user_model
 
 class ProductManagerForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
     class Meta:
         model = User
         fields = ('username', 'password', 'email')
 
 class AccountingManagerForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
     class Meta:
         model = User
         fields = ('username', 'password', 'email')

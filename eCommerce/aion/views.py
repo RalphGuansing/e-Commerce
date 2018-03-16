@@ -48,11 +48,12 @@ class ProductManagerFormView(generic.View):
             user = form1.save(commit=False)
             username = form1.cleaned_data['username']
             password = form1.cleaned_data['password']
+            user.set_password(password)
             email = form1.cleaned_data['email']
             user.save()
             g = Group.objects.get(name__contains="Product")
             g.user_set.add(user)
-            user.set_password(password)
+#            user.set_password(password)
             g.save()
 
             user_details = form2.save(commit=False)
@@ -85,10 +86,10 @@ class AccountingManagerFormView(generic.View):
             username = form1.cleaned_data['username']
             password = form1.cleaned_data['password']
             email = form1.cleaned_data['email']
+            user.set_password(password)
             user.save()
             g = Group.objects.get(name__contains="Accounting")
             g.user_set.add(user)
-            user.set_password(password)
             g.save()
 
             user_details = form2.save(commit=False)
