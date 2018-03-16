@@ -37,7 +37,7 @@ class ProductManagerFormView(generic.View):
     def get(self, request):
         form1 = self.form_class(None)
         form2 = self.second_form_class(None)
-        return render(request, self.template_name,{'form1':form1,'form2':form2, "title": self.title})
+        return render(request, self.template_name,{'form1':form1,'form2':form2, "title": self.title, "loggeduser":self.request.user})
 
     #process form data
     def post(self, request):
@@ -74,7 +74,7 @@ class AccountingManagerFormView(generic.View):
     def get(self, request):
         form1 = self.form_class(None)
         form2 = self.second_form_class(None)
-        return render(request, self.template_name,{'form1':form1,'form2':form2, "title": self.title})
+        return render(request, self.template_name,{'form1':form1,'form2':form2, "title": self.title, "loggeduser":self.request.user})
 
     #process form data
     def post(self, request):
