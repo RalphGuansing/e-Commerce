@@ -75,7 +75,7 @@
 
     <div class="col s1">
     <!-- DATE HERE -->
-    {{ cart.date_created|date:"D, d M, Y" }}
+    <a href="{% url 'detailcart' cart.cart_id  %}">{{ cart.date_created|date:'M d, Y' }}</a>
 
     </div>
     <div class="col s1"></div>

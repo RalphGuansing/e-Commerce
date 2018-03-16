@@ -361,6 +361,29 @@ class AMCartView(TemplateView):
 
         context["totalsum"] = totalsum
         return context
+    
+class Detail_CartView(TemplateView):
+    template_name = 'aion/amcart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Detail_CartView, self).get_context_data(**kwargs)
+        try:
+            cart = Cart.objects.get(id=self.kwargs['pk'],isPurchased=True)
+        except Cart.DoesNotExist:
+            cart = None
+        orders = Order.objects.filter(cart_id=cart)
+
+        context["orders"] = orders
+        context["cart"] = cart
+        context["loggeduser"] = self.request.user
+
+        totalsum = 0;
+
+        for order in orders:
+            totalsum += order.item_quantity * order.product_id.item_price
+
+        context["totalsum"] = totalsum
+        return context
 
 def delete_order(request, pk):
     order = Order.objects.get(pk=pk)
