@@ -56,9 +56,11 @@
 -->
                   <p>
                     <i class="material-icons cyan-text text-darken-2">email</i> {{ user.email }}</p>
+                    {% if loggeduser == object %}
                   <p>
                       <a href="{% url 'editaccount' object.id %}">Edit Info</a></p>
-<!--
+                    {% endif %}
+<!--                
                   <p>
                     <i class="material-icons cyan-text text-darken-2">airplanemode_active</i> BAR - AUS</p>
 -->
