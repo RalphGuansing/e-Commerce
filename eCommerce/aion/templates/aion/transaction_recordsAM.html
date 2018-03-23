@@ -1,0 +1,193 @@
+{% extends 'aion/navigationbar.html' %}
+{% load static %}
+{% load mathfilters %}
+{% load humanize %}
+{% block content %}
+
+<!-- This file displays the content of the website -->
+<div class="row">
+    <div class="col s2"></div>
+    <div class="col s3">
+    <H3><Strong>PURCHASE HISTORY</Strong></H3>
+    </div>
+
+
+    <div class="col s2"></div> 
+</div>
+
+<div class="row">
+    <div class="col s2"></div>
+    <div class="col s3">
+    <H5><Strong>Legend</Strong></H5>      
+    </div>
+    <div class="col s2"></div>
+</div>
+<div class="row">
+    <div class="col s2"></div>
+    <div class="col s3">
+        <a><i class="small material-icons">shopping_cart</i></a><Strong> - Transaction Details  </Strong>     
+    </div>
+    <div class="col s2"></div>
+</div>
+<div class="row">
+    <div class="col s2"></div>
+    <div class="col s3">     
+        <a class="orange-text text-darken-4" ><i class="small material-icons">book</i></a><Strong> - User Transactions</Strong>
+    </div>
+    <div class="col s2"></div>
+</div>
+<div class="row">
+    <div class="col s2"></div>
+    <div class="col s3">
+        <a class="green-text text-darken-4" ><i class="small material-icons">account_box</i></a><Strong> - User Profile</Strong>
+    </div>
+
+
+    <div class="col s2"></div>
+</div>
+
+
+
+<div class="row">
+    <div class="col s2"></div>
+    <div class="col s8">
+        
+    <table id="transaction_id" class="highlight">
+    <tr>
+        <th></th>
+        <th onclick="sortTable(1)"><a class ="deep-orange-text text-darken-3" style="cursor: pointer;">USER</a></th>
+        <th onclick="sortTable(2)"><a class ="deep-orange-text text-darken-3" style="cursor: pointer;">DATE</a></th>
+        <th onclick="sortTable(3)"><a class ="deep-orange-text text-darken-3" style="cursor: pointer;">AMOUNT</a></th>
+    </tr>
+    {% for cart in cart_array %}
+    <tr>
+        <td><a href="{% url 'amcart' cart.cart_id.id %}"><i class="small material-icons">shopping_cart</i></a>
+            
+            <a class="orange-text text-darken-4" href="{% url 'usertransactionsAM' cart.cart_id.user_id.id %}"><i class="small material-icons">book</i></a>
+            
+            <a class="green-text text-darken-4" href="{% url 'viewaccount' cart.cart_id.user_id.id %}"><i class="small material-icons">account_box</i></a>
+        
+        </td>
+        <td>{{ cart.cart_id.user_id.username }}</td>
+        <td value="{{ cart.cart_id.date_created|date:'mdY' }}{{ cart.cart_id.time_created|time:'Hi' }}">
+            {{ cart.cart_id.date_created|date:'M d, Y' }}, {{ cart.cart_id.time_created|time:'H:i' }}</td>
+        <td>$ {{ cart.totalsum }}</td>
+    </tr>
+    
+    {% endfor %}
+        </table>
+        </div>
+    <div class="col s2"></div>
+</div>
+    
+        
+
+<div class="row">
+    <div class="col s2"></div>
+    <div class="col s8">
+
+    </div>
+    <div class="col s2"></div>
+</div> 
+    
+
+
+        
+        
+
+    
+{% block script %}
+<script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("transaction_id");
+  switching = true;
+  //Set the sorting direction to ascending:
+  dir = "asc"; 
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.getElementsByTagName("TR");
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /*check if the two rows should switch place,
+      based on the direction, asc or desc:*/
+        var tempString1 = x.innerHTML;
+          var tempString2 = y.innerHTML;
+          tempString1 = tempString1.slice(2);
+          tempString2 = tempString2.slice(2);
+        var money1, money2;
+          money1 = parseFloat(tempString1);
+          money2 = parseFloat(tempString2);
+        console.log(x.innerHTML);
+      if (dir == "asc") {
+          if(Number(money1) === money1 && Number(money2) === money2 && (money1 % 1 !== 0 || money2 !== 0)){
+                  if (money1 > money2) {
+                  //if so, mark as a switch and break the loop:
+                              shouldSwitch= true;
+                              break;
+                      }
+            }
+          else{     
+              console.log("Pumasok");
+                  if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                  //if so, mark as a switch and break the loop:
+                              shouldSwitch= true;
+                              break;
+                      }
+              }
+          }
+    if (dir == "desc") {
+        if(Number(money1) === money1 && Number(money2) === money2 && (money1 % 1 !== 0 || money2 !== 0)){
+                  if (money1 < money2) {
+                  //if so, mark as a switch and break the loop:
+                              shouldSwitch= true;
+                              break;
+                      }
+            }
+        else {
+            console.log("Pumasok");
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          //if so, mark as a switch and break the loop:
+          shouldSwitch= true;
+          break;
+        }
+      }
+    }
+          
+
+        
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      //Each time a switch is done, increase this count by 1:
+      switchcount ++;      
+    } else {
+      /*If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again.*/
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
+
+{% endblock %}
+
+
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'aion/navigationbar.html' %}
+{% load static %}
+{% block content %}
+
+<div class = "container checkoutClass">
+  <div class = "col s12 left-align">
+      <h5 class = "flow-text"> Billing Address </h5>
+  </div>
+
+  <div class="divider"></div>
+  <div class = "section col s12 center">
+       {{ userDetails.billing_address }}
+  </div>
+
+  <div class = "col s12 left-align">
+      <h5 class = "flow-text"> Shipping Address </h5>
+  </div>
+
+  <div class="divider"></div>
+  <div class = "section col s12 center">
+       {{ userDetails.shipping_address }}
+  </div>
+
+  <div class = "col s12 left-align">
+      <h5 class = "flow-text"> Credit Card Payment </h5>
+  </div>
+  <div class="divider"></div>
+  <div class = "section col s12 center">
+      <form class = "" method = "POST">
+          <div class = "row">
+              <div class="input-field col s8">
+                  <input placeholder="Visa" id="ccnumber" type="text" class="validate">
+                  <label for="ccnumber">Credit Card Number</label>
+              </div>
+              <div class="input-field col s2">
+                  <input placeholder="MM/YY"id="expiry" type="text" class="validate">
+                  <label for="expiry">Expiration (MM/YY)</label>
+              </div>
+              <div class="input-field col s2">
+                  <input placeholder="3 digit number" id="seccode" type="text" class="validate">
+                  <label for="seccode">Security Code</label>
+              </div>
+          </div>
+      </form>
+
+  </div>
+  <div class = "row">
+      <div class="col s12">
+          <a href="{% url 'placedorder' %}" class="waves-effect waves-light btn amber right_btn edit_btn"><i class="material-icons left">lock</i>Place Order</a>
+
+      </div>
+  </div>
+
+  <div>
+  {% csrf_token %}
+</div>
+
+{% endblock %}

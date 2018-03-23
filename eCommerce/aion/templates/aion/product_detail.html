@@ -1,0 +1,76 @@
+{% extends 'aion/navigationbar.html' %}
+{% load static %}
+{% load aion_extras %}
+{% load humanize %}
+{% block content %}
+
+<div class="main_product_details"> 
+        <div class="item product_details_post">
+          <div class="card">
+            <div class="card-image">
+             {% if object.item_photo %}
+              <img class="item_photo materialboxed"src="{{product.item_photo.url}}">
+              {% endif %}
+              
+            </div>
+            <div class="card-content">
+              <span class="card-title">{{object.item_name}}</span>
+              <span class="card-title"><strong>Category: </strong><a href="#">{{object.item_type}}</a></span>
+                <p><strong>Quantity: </strong>{{object.item_quantity}}</p>
+                <strong>Description:</strong> 
+                <p>{{ object.item_description|linebreaks }}</p>
+                
+                
+            </div>
+            <div class="card-action">
+              <a href="#">$ {{object.item_price|intcomma}}</a>
+                
+                {% if request.user|has_group:"Product Manager"%}
+                <!--PRODUCT MANAGER FUNCTIONALITIES-->
+                <a href="{% url 'editproduct' object.id %}" class="waves-effect waves-light btn amber right_btn edit_btn">Edit <i class="material-icons right">edit</i></a>
+                <a href="{% url 'deleteproduct' object.id %}" class="waves-effect waves-light btn red darken-3 right_btn">Delete <i class="material-icons right">delete</i></a>
+                {% elif request.user|has_group:"Accounting Manager" %}
+                <a href="#" class="waves-effect waves-light btn amber right_btn edit_btn">Sales of this product<i class="material-icons right">attach_money</i></a>
+                <a href="#" class="waves-effect waves-light btn red darken-3 right_btn">Sales of this product's type<i class="material-icons right">attach_money</i></a>
+                {% elif request.user|has_group:"Customer" %}
+                <a href="{% url 'add-to-cart' object.id %}" class="waves-effect waves-light btn amber right_btn edit_btn">Add to Shopping Cart <i class="material-icons right">shopping_cart</i></a>
+                <a href="{% url 'add-review' object.id %}" class="waves-effect waves-light btn red darken-3 right_btn">Review <i class="material-icons right">stars</i></a>
+                {% endif %}
+            </div>
+          </div>
+            
+            
+    {% for review in reviews %}
+    <div class="row">
+        <div class="col s12">
+            <div class="card">
+<!--
+                <div class="card-image">
+                    <img src="images/sample-1.jpg">
+                    <span class="card-title">Card Title</span>
+                    <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+                </div>
+-->
+            <div class="card-content">
+                <span class="card-title"><a href="{% url 'viewaccount' review.user_id.id %}">{{ review.user_id.username }}</a></span>
+                <span class="card-title">
+                
+                </span>
+                <p>
+                    {{ review.commentText|linebreaks }}
+                </p>
+            </div>
+        </div>
+        </div>
+    </div>
+    {% endfor %}
+            
+      </div>
+    
+    <br>
+    
+</div>
+
+
+
+{% endblock %}

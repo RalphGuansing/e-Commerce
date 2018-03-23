@@ -1,0 +1,103 @@
+{% extends 'aion/navigationbar.html' %}
+{% load static %}
+{% load aion_extras %}
+{% load humanize %}
+{% block content %}
+
+<!-- This file displays the content of the website -->
+<div class="row homeClass "id="home">
+    <div class="col s2"></div>
+    <div class="col s1">
+    <ul>
+    <li>                <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'search' %}">
+                    <div class="form-group input-field">
+
+                        <label for="id_search" class="">Search</label>
+                        <input type="text" class="form-control" name="search_input" id="searchtag" required id="id_search">
+                    </div>
+<!--                    <button type="submit" class="btn btn-default">Search</button>-->
+                </form></li>
+    <li><a href="{% url 'home'  %}" class="orange-text text-lighten-1 category_watch">SHOP ALL</a></li>
+    <li><a href="{% url 'category' 'analog-watch' %}" class="orange-text text-lighten-1 category_watch">ANALOG WATCH</a></li>
+    <li><a href="{% url 'category' 'digital-watch' %}" class="orange-text text-lighten-1 category_watch">DIGITAL WATCH</a></li>
+    <li><a href="{% url 'category' 'smart-watch' %}" class="orange-text text-lighten-1 category_watch">SMART WATCH</a></li>
+
+    </ul>
+    </div>
+    <div class="col s7 main">
+    {% for product in products %}
+<!--
+     <div class="row product_post">
+          <div class="card">
+            <div class="card-image">
+             {% if product.item_photo %}
+              <img class="item_photo"src="{{product.item_photo.url}}">
+              {% endif %}
+
+            </div>
+            <div class="card-content">
+              <span class="card-title textinpost">{{product.item_name}}</span>
+            </div>
+            <div class="card-action">
+              <a href="#">$ {{product.item_price}}</a>
+            </div>
+          </div>
+
+      </div>
+-->
+        <div class="item product_post">
+          <div class="card">
+            <div class="card-image waves-effect waves-block waves-light">
+             {% if product.item_photo %}
+                <a href="{% url 'viewproduct' product.id %}"><img class="item_photo"src="{{product.item_photo.url}}"></a>
+              {% endif %}
+                <center><div class="ql_button ql_button_div"><a class="waves-effect waves-light btn modal-trigger grey lighten-1 " href="#product_modal{{product.id}}">Quick Look</a></div>
+              </center>
+            </div>
+            <div class="card-content">
+              <span class="card-title textinpost">{{product.item_name}}</span>
+            </div>
+            <div class="card-action">
+              <a href="#">$ {{product.item_price|intcomma}}</a>
+            </div>
+          </div>
+      </div>
+
+    <div id="product_modal{{product.id}}" class="modal item m_product_details_post card">
+
+
+            <div class="card-image">
+
+              {% if product.item_photo %}
+                <a href="{% url 'viewproduct' product.id %}"><img class="m_item_photo"src="{{product.item_photo.url}}"></a>
+              {% endif %}
+
+
+            </div>
+            <div class="card-content">
+              <span class="card-title textinpost"> {{product.item_name}} </span>
+                <p><Strong>Item Description:</Strong></p>
+                {{product.item_description|linebreaks}}
+            </div>
+            <div class="card-action">
+              <a href="#">$ {{product.item_price|intcomma}}</a>
+            </div>
+
+      </div>
+
+
+    <br>
+
+    {% if forloop.counter|divisibleby:5 %}
+    <br>
+    {% endif %}
+    {% endfor %}
+    </div>
+    <div class="col s2"></div>
+    </div>
+
+
+
+<!-- RELOCATE THIS SECTION TO A DIFFERENT FILE LATER -->
+
+{% endblock %}
