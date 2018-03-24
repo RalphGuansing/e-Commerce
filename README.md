@@ -9,4 +9,5 @@
 3. crispy-forms-materialize
 4. django-material
 5. django-autoslug-iplweb
-
+6. django-session-timeout
+7. django-tracking

@@ -11,6 +11,7 @@ from django.contrib.auth.models import User, Group
 from django.conf import settings
 from django.core.cache import cache, caches
 from importlib import import_module
+from datetime import datetime
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
@@ -194,7 +195,6 @@ def user_edit(request, pk):
         'form1':form1,'form2':form2,'form3':form3, 'form4':form4,"title": 'Update'})
 
 def login_view(request):
-    print(request.user)
     title = "Login"
     form = UserLoginForm(request.POST or None)
 
@@ -203,23 +203,7 @@ def login_view(request):
         password = form.cleaned_data.get("password")
         user = authenticate(username=username, password=password)
         login(request,user)
-
-        cache_obj = caches['default']
-        cache_key = "user_pk_%s_restrict" % user.pk
-        cache_value = cache_obj.get(cache_key)
-        cache_timeout = 86400
-
-        if cache_value is not None:
-            if request.session.session_key != cache_value:
-                engine = import_module(settings.SESSION_ENGINE)
-                session = engine.SessionStore(session_key=cache_value)
-                session.delete()
-                cache_obj.set(cache_key, request.session.session_key, cache_timeout)
-                print('Invalid Session')
-        else:
-            cache_obj.set(cache_key, request.session.session_key, cache_timeout)
-
-        print(user.last_login)
+        print(user)
         return HttpResponseRedirect('/')
     return render(request, "aion/login.html",{"form":form, "title": title})
 

@@ -22,6 +22,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'ac9=*7yundjl3xnf=f(!yo&+j=((9%hvz%e30v40#rp0vg+55+'
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+# SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_NAME = 'id'
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_AGE = 30
+
+# os.environ['HTTPS'] = "on"
+# os.environ['wsgi.url_scheme'] = 'https'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -45,7 +54,6 @@ INSTALLED_APPS = [
     'material',
     'material.frontend',
     'mathfilters',
-    
 ]
 
 MIDDLEWARE = [
@@ -56,9 +64,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'aion.middleware.AutoLogout',
 ]
 
 ROOT_URLCONF = 'eCommerce.urls'
+
 
 TEMPLATES = [
     {
@@ -134,3 +145,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default layout to use with "crispy_forms"
 CRISPY_TEMPLATE_PACK = 'materialize_css_forms'
+
+GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
