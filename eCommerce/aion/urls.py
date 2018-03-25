@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
@@ -31,4 +31,5 @@ urlpatterns = [
     path('administrator/', views.AdminView.as_view(), name='administrator'),
     path('createProductManager/', views.ProductManagerFormView.as_view(), name='createProductManager'),
     path('createAccountingManager/', views.AccountingManagerFormView.as_view(), name='createAccountingManager'),
+    #path('session_security/', include('session_security.urls')),
     ]

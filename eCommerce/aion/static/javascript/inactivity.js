@@ -17,7 +17,11 @@ function timerIncrement() {
     idleTime = idleTime + 1;
 
     if (idleTime > 1) { // 20 minutes
+        console.log("expired");
         window.location.reload();
-        document.alert('Session expired!');
+        window.alert('Session expired!');
     }
+    // if (idleTime == 1) {
+    //     window.alert('Session will expire in 1min due to inactivity!');
+    // }
 }

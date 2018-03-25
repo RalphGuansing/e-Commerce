@@ -26,8 +26,9 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 # SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_NAME = 'id'
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_AGE = 30
-
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+#EXPIRE_AFTER = 1
 
 # os.environ['HTTPS'] = "on"
 # os.environ['wsgi.url_scheme'] = 'https'
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
     'material.frontend',
     'mathfilters',
     'axes',
+    #'session_security',
 ]
 
 MIDDLEWARE = [
@@ -64,10 +66,10 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'aion.middleware.AutoLogout',
+    #'session_security.middleware.SessionSecurityMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    #'aion.middleware.AutoLogout',
 ]
 
 ROOT_URLCONF = 'eCommerce.urls'
@@ -84,6 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                #'django.core.context_processors.request',
             ],
         },
     },
@@ -162,7 +165,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default layout to use with "crispy_forms"
 CRISPY_TEMPLATE_PACK = 'materialize_css_forms'
 
-GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
 
 #Password brute force security
 AXES_FAILURE_LIMIT = 5

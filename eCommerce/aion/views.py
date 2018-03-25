@@ -205,14 +205,6 @@ def login_view(request):
         user = authenticate(username=username, password=password)
         login(request,user)
         return HttpResponseRedirect('/')
-    else:
-        user_login_failed.send(
-            sender = User,
-            request = request,
-            credentials = {
-                'username': form.cleaned_data.get('username')
-            }
-        )   
     return render(request, "aion/login.html",{"form":form, "title": title})
 
 #Add Product

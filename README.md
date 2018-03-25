@@ -10,3 +10,4 @@
 4. django-material
 5. django-autoslug-iplweb
 6. django-axes
+7. django-session-security

@@ -2,26 +2,24 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.contrib import auth
 from django.shortcuts import HttpResponse, render, redirect
+from django.utils.deprecation import MiddlewareMixin
 
 
-def AutoLogout(get_response):
+class AutoLogout(MiddlewareMixin):
 
-    def middleware(request):
+    def process_request(self, request):
+        print(request.user.is_authenticated)
+        if not request.user.is_authenticated:
+          #Can't log out if not logged in
+            return
+
         try:
-            if not request.user.is_authenticated() :
-              #Can't log out if not logged in
-                return
+            print('hello')
+            if datetime.now() - request.session['last_touch'] > timedelta( 0, 1 * 60, 0):
+                auth.logout(request)
+                del request.session['last_touch']
+                return HttpResponseRedirect('/')
+        except KeyError as e:
+            print(e)
 
-            try:
-                if datetime.now() - request.session['last_touch'] > timedelta( 0, 1 * 60, 0):
-                    auth.logout(request)
-                    del request.session['last_touch']
-                    return HttpResponseRedirect('/')
-            except KeyError:
-                pass
-
-            request.session['last_touch'] = datetime.now()
-        except:
-            return get_response(request)
-
-    return middleware
+        request.session['last_touch'] = datetime.now()
