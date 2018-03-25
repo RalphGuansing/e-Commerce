@@ -12,6 +12,7 @@ from django.conf import settings
 from django.core.cache import cache, caches
 from importlib import import_module
 from datetime import datetime
+from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
@@ -203,8 +204,15 @@ def login_view(request):
         password = form.cleaned_data.get("password")
         user = authenticate(username=username, password=password)
         login(request,user)
-        print(user)
         return HttpResponseRedirect('/')
+    else:
+        user_login_failed.send(
+            sender = User,
+            request = request,
+            credentials = {
+                'username': form.cleaned_data.get('username')
+            }
+        )   
     return render(request, "aion/login.html",{"form":form, "title": title})
 
 #Add Product

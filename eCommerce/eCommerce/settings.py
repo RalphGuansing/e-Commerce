@@ -28,6 +28,7 @@ SESSION_COOKIE_NAME = 'id'
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_AGE = 30
 
+
 # os.environ['HTTPS'] = "on"
 # os.environ['wsgi.url_scheme'] = 'https'
 
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     'material',
     'material.frontend',
     'mathfilters',
+    'axes',
 ]
 
 MIDDLEWARE = [
@@ -65,7 +67,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'aion.middleware.AutoLogout',
+    #'aion.middleware.AutoLogout',
 ]
 
 ROOT_URLCONF = 'eCommerce.urls'
@@ -110,6 +112,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS' : {
+            'min_length' : 9,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -118,6 +123,17 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+    'axes_cache': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+AXES_CACHE = 'axes_cache'
 
 
 # Internationalization
@@ -147,3 +163,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CRISPY_TEMPLATE_PACK = 'materialize_css_forms'
 
 GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
+
+#Password brute force security
+AXES_FAILURE_LIMIT = 5
+AXES_LOCK_OUT_AT_FAILURE = True
+AXES_LOCKOUT_TEMPLATE = None
+#manage.py axes_reset
+#manage.py axes_reset ip
+#manage.py axes_reset username
