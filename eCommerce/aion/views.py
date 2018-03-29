@@ -13,6 +13,8 @@ from django.core.cache import cache, caches
 from importlib import import_module
 from datetime import datetime
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
@@ -139,37 +141,36 @@ class UserFormView(generic.View):
             username = form1.cleaned_data['username']
             password = form1.cleaned_data['password']
 
-            first_isalpha = password[0].isalpha()
-            if len(password) < 8:
-                raise forms.ValidationError("The new password must be at least 8 characters long.")
-            if all(c.isalpha() == first_isalpha for c in password):
-                raise forms.ValidationError("The new password must contain at least one letter and at least one digit or" \
-                                            " punctuation character.")
-            else:
-                user.set_password(password)
-                user.save()
-                user.groups.add(Group.objects.get(name='Customer'))
+            try:
+                validate_password(password,user)
+            except ValidationError as e:
+                form1.add_error('password',e)
+                return render(request, self.template_name,{'form1':form1,'form2':form2,'form3':form3, 'form4':form4,"title": self.title})
+
+            user.set_password(password)
+            user.save()
+            user.groups.add(Group.objects.get(name='Customer'))
 
 
-                user_details = form2.save(commit=False)
-                user_details.user_id = user
+            user_details = form2.save(commit=False)
+            user_details.user_id = user
 
-                billing_address = form3.save()
-                shipping_address = form4.save()
+            billing_address = form3.save()
+            shipping_address = form4.save()
 
-                user_details.billing_address = billing_address
-                user_details.shipping_address = shipping_address
-                user_details.save()
+            user_details.billing_address = billing_address
+            user_details.shipping_address = shipping_address
+            user_details.save()
 
 
-                #return User objects if credentials are correct
-                user = authenticate(username=username,password=password)
+            #return User objects if credentials are correct
+            user = authenticate(username=username,password=password)
 
-                if user is not None:
+            if user is not None:
 
-                    if user.is_active:
-                        login(request,user)
-                        return HttpResponseRedirect('/')
+                if user.is_active:
+                    login(request,user)
+                    return HttpResponseRedirect('/')
 
 
 
