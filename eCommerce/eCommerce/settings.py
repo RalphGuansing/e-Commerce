@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     'material.frontend',
     'mathfilters',
     'axes',
-    #'session_security',
 ]
 
 MIDDLEWARE = [
@@ -67,7 +66,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'aion.middleware.AutoLogout',
-    #'session_security.middleware.SessionSecurityMiddleware',
+    'aion.middleware.UserRestrict',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]

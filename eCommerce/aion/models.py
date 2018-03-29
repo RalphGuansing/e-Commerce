@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from autoslug import AutoSlugField
 from datetime import datetime
+from django.contrib.sessions.models import Session
 
 class Address_Details(models.Model):
     house_number = models.CharField(max_length=200)
@@ -97,3 +98,8 @@ class Review(models.Model):
     
     def get_absolute_url(self):
         return reverse('viewproduct', args=[str(self.product_id.id)])
+
+# class UserSession(models.Model):
+#     user = models.ForeignKey(User,on_delete=models.CASCADE)
+#     session_id = models.CharField(max_length=200)
+

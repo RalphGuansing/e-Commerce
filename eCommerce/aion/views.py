@@ -195,6 +195,9 @@ def user_edit(request, pk):
     return render(request, 'aion/register.html', {
         'form1':form1,'form2':form2,'form3':form3, 'form4':form4,"title": 'Update'})
 
+# def user_logged_in_handler(sender, request, user, **kwargs):
+#     UserSession.objects.get_or_create(user = user, session_id = request.session.session_key)
+
 def login_view(request):
     title = "Login"
     form = UserLoginForm(request.POST or None)
@@ -204,6 +207,7 @@ def login_view(request):
         password = form.cleaned_data.get("password")
         user = authenticate(username=username, password=password)
         login(request,user)
+        # user_logged_in.connect(user_logged_in_handler)
         return HttpResponseRedirect('/')
     return render(request, "aion/login.html",{"form":form, "title": title})
 
