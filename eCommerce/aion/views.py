@@ -135,30 +135,38 @@ class UserFormView(generic.View):
 
             username = form1.cleaned_data['username']
             password = form1.cleaned_data['password']
-            user.set_password(password)
-            user.save()
-            user.groups.add(Group.objects.get(name='Customer'))
+
+            first_isalpha = password[0].isalpha()
+            if len(password) < 8:
+                raise forms.ValidationError("The new password must be at least 8 characters long.")
+            if all(c.isalpha() == first_isalpha for c in password):
+                raise forms.ValidationError("The new password must contain at least one letter and at least one digit or" \
+                                            " punctuation character.")
+            else:
+                user.set_password(password)
+                user.save()
+                user.groups.add(Group.objects.get(name='Customer'))
 
 
-            user_details = form2.save(commit=False)
-            user_details.user_id = user
+                user_details = form2.save(commit=False)
+                user_details.user_id = user
 
-            billing_address = form3.save()
-            shipping_address = form4.save()
+                billing_address = form3.save()
+                shipping_address = form4.save()
 
-            user_details.billing_address = billing_address
-            user_details.shipping_address = shipping_address
-            user_details.save()
+                user_details.billing_address = billing_address
+                user_details.shipping_address = shipping_address
+                user_details.save()
 
 
-            #return User objects if credentials are correct
-            user = authenticate(username=username,password=password)
+                #return User objects if credentials are correct
+                user = authenticate(username=username,password=password)
 
-            if user is not None:
+                if user is not None:
 
-                if user.is_active:
-                    login(request,user)
-                    return HttpResponseRedirect('/')
+                    if user.is_active:
+                        login(request,user)
+                        return HttpResponseRedirect('/')
 
 
 
