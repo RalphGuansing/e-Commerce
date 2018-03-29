@@ -65,7 +65,8 @@ class ProductManagerFormView(generic.View):
             user_details.user_id = user
             user_details.save()
 
-
+            log = 'Created Product Manager user' + username
+            Logs.objects.create(user=self.request.user,action=log)
             return HttpResponseRedirect('/administrator/')
 
 
@@ -101,6 +102,8 @@ class AccountingManagerFormView(generic.View):
             user_details.user_id = user
             user_details.save()
 
+            log = 'Created Accounting Manager user' + username
+            Logs.objects.create(user=self.request.user,action=log)
 
             return HttpResponseRedirect('/administrator/')
 
@@ -226,6 +229,8 @@ class CreateProductView(CreateView):
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
+        log = 'Added item ' + str(form.instance.item_name)
+        Logs.objects.create(user=self.request.user,action=log)
         return super(CreateProductView, self).form_valid(form)
     
     def get_context_data(self, **kwargs):
@@ -233,6 +238,7 @@ class CreateProductView(CreateView):
         context["loggeduser"] = self.request.user
         #context["post_id"] = Offer.objects.get(id=self.kwargs['offer_id']).post_id.id
         return context
+
 
 class CreateReviewView(CreateView):
     form_class = ReviewForm
@@ -263,7 +269,8 @@ class EditProductView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         context = super(EditProductView, self).get_context_data(**kwargs)
         context["loggeduser"] = self.request.user
-        #context["post_id"] = Offer.objects.get(id=self.kwargs['offer_id']).post_id.id
+        log = 'Edited item' + self.object.item_name
+        Logs.objects.create(user=self.request.user,action=log)
         return context
 
 #Delete Product
@@ -282,6 +289,8 @@ class DeleteProductView(generic.DeleteView):
 
     def get_success_url(self):
         # Assuming there is a ForeignKey from Comment to Post in your model
+        log = 'Deleted item' + self.object.item_name
+        Logs.objects.create(user=self.request.user,action=log)
         return reverse('home')
 
 

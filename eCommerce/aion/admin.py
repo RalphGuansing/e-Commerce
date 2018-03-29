@@ -7,3 +7,9 @@ admin.site.register(Address_Details)
 admin.site.register(Cart)
 admin.site.register(Order)
 
+
+class LogsAdmin(admin.ModelAdmin):
+	list_display = ('user','date','action')
+
+admin.site.register(Logs, LogsAdmin)
+

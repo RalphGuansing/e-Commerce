@@ -99,7 +99,9 @@ class Review(models.Model):
     def get_absolute_url(self):
         return reverse('viewproduct', args=[str(self.product_id.id)])
 
-# class UserSession(models.Model):
-#     user = models.ForeignKey(User,on_delete=models.CASCADE)
-#     session_id = models.CharField(max_length=200)
+
+class Logs(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    date = models.DateField(default=datetime.now,blank=True)
+    action = models.CharField(max_length=300)
 
