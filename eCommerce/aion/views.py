@@ -15,6 +15,7 @@ from datetime import datetime
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.contrib import messages
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
@@ -324,12 +325,21 @@ class SearchView(generic.ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        return Product.objects.filter(item_name__icontains=self.request.GET.get("search_input", None)).order_by('-id')
+        product_string = self.request.GET.get("search_input", None)
+        return Product.objects.filter(item_name__icontains=product_string).order_by('-id')
 
     def get_context_data(self, **kwargs):
         context = super(SearchView, self).get_context_data(**kwargs)
         context["loggeduser"] = self.request.user
         return context
+    
+    def get(self, *args, **kwargs):
+        product_string = self.request.GET.get("search_input", None)
+        if len(product_string) > 40:
+            messages.success(self.request, 'You cannot use more than X characters')
+            return redirect('home')
+        return super(SearchView, self).get(*args, **kwargs)
+    
 
 class CategoryView(generic.ListView):
     template_name = 'aion/home.html'
