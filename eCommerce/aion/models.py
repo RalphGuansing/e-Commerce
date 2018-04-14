@@ -107,3 +107,7 @@ class Logs(models.Model):
     action = models.CharField(max_length=300)
     result = models.CharField(max_length=30)
 
+class Visitor(models.Model):
+    pupil = models.OneToOneField(User, null=False,on_delete=models.CASCADE)
+    session_key = models.CharField(null=False, max_length=40)
+

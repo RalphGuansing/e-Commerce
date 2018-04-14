@@ -174,7 +174,7 @@ class UserFormView(generic.View):
 
             #return User objects if credentials are correct
             user = authenticate(username=username,password=password)
-            print(user.user_login_failed())
+   
             if user is not None:
 
                 if user.is_active:
@@ -232,10 +232,15 @@ def login_view(request):
         username = form.cleaned_data.get("username")
         password = form.cleaned_data.get("password")
         user = authenticate(username=username, password=password)
-        print(user)
-        if user is not None:
-            login(request,user)
-            return HttpResponseRedirect('/')
+        # try:
+        #     del request.session[username]
+        #     print('deleted')
+        # except Exception as e:
+        #     print(e)
+        #     print('eto ba yun?')
+        login(request,user)
+        request.session[username] = request.session.session_key
+        return HttpResponseRedirect('/')
     else:
         try:
             user_login_failed.send(
@@ -246,10 +251,10 @@ def login_view(request):
                 }
             )
             obj = AccessAttempt.objects.filter(username=temp_credentials['username'])
-            print(list(obj)[0].failures_since_start)
+   
             if list(obj)[0].failures_since_start > 5:
                 User.objects.filter(username=temp_credentials['username']).update(is_active=False)
-                print('lockout')
+   
         except:
             pass
     return render(request, "aion/login.html",{"form":form, "title": title})

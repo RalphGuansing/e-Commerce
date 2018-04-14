@@ -6,6 +6,7 @@ from django.utils.deprecation import MiddlewareMixin
 from django.core.cache import cache, caches
 from importlib import import_module
 from .models import *
+from django.contrib.sessions.models import Session
 
 
 class AutoLogout(MiddlewareMixin):
@@ -26,22 +27,20 @@ class AutoLogout(MiddlewareMixin):
         request.session['last_touch'] = datetime.now()
 
 
-class UserRestrict(MiddlewareMixin):
+class OneSessionPerUserMiddleware(MiddlewareMixin):
+
     def process_request(self, request):
-        if request.user.is_authenticated:
-            try:
-                cur_session_key = UserSession.objects.get(user=request.user).session.session_key
-            except:
-                cur_session_key = None
-            if cur_session_key != request.session.session_key:
-                # Default handling... kick the old session...
-                try:
-                    s = Session.objects.get(session_key=cur_session_key)
-                    s.delete()
-                    print('session deleted')
-                except:
-                    pass
-            # if not cur_session_key or cur_session_key != request.session.session_key:
-            #     p = request.user.get_profile()
-            #     p.session_key = request.session.session_key
-            #     p.save()
+        if isinstance(request.user, User):
+            current_key = request.session.session_key
+            if hasattr(request.user, 'visitor'):
+                active_key = request.user.visitor.session_key
+                print(active_key, current_key)
+                if active_key != current_key:
+                    Session.objects.filter(session_key=active_key).delete()
+                    request.user.visitor.session_key = current_key
+                    request.user.visitor.save()
+            else:
+                Visitor.objects.create(
+                    pupil=request.user,
+                    session_key=current_key,
+                )
