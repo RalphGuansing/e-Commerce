@@ -110,6 +110,7 @@ DATABASES = {
 AUTHENTICATION_BACKENDS = [
     #'axes.backends.AxesModelBackend',
     'django.contrib.auth.backends.ModelBackend',
+    'aion.backends.CaseInsensitiveModelBackend',
 ]
 
 
