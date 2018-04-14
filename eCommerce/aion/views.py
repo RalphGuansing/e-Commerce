@@ -17,6 +17,9 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from axes.models import *
+from django.core.mail import send_mail
+import datetime
+import hashlib
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
@@ -56,7 +59,15 @@ class ProductManagerFormView(generic.View):
         if form1.is_valid() and form2.is_valid():
             user = form1.save(commit=False)
             username = form1.cleaned_data['username']
-            password = form1.cleaned_data['password']
+            
+            #for auto generated password
+            string = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            hash_object = hashlib.md5(string.encode())
+            hex_dig = hash_object.hexdigest()
+            print(hex_dig)
+            
+            password  = hex_dig[0:12]
+#            password = form1.cleaned_data['password']
             user.set_password(password)
             email = form1.cleaned_data['email']
             user.save()
@@ -71,9 +82,13 @@ class ProductManagerFormView(generic.View):
 
             log = 'Create Product Manager user' + username
             Logs.objects.create(user=self.request.user,location='createProductManager/',action=log,result='success')
+            
+            messages.success(self.request, 'This is your password '+ password)
+            
             return HttpResponseRedirect('/administrator/')
+        
         else:
-            log = 'Create Product Manager user' + username
+            log = 'Create Product Manager user'
             Logs.objects.create(user=self.request.user,location='createProductManager/',action=log,result='fail')
 
 
@@ -97,7 +112,15 @@ class AccountingManagerFormView(generic.View):
         if form1.is_valid() and form2.is_valid():
             user = form1.save(commit=False)
             username = form1.cleaned_data['username']
-            password = form1.cleaned_data['password']
+            
+            #for auto generated password
+            string = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            hash_object = hashlib.md5(string.encode())
+            hex_dig = hash_object.hexdigest()
+            print(hex_dig)
+            
+            password  = hex_dig[0:12]
+#            password = form1.cleaned_data['password']
             email = form1.cleaned_data['email']
             user.set_password(password)
             user.save()
@@ -108,14 +131,55 @@ class AccountingManagerFormView(generic.View):
             user_details = form2.save(commit=False)
             user_details.user_id = user
             user_details.save()
-
+            
+    
             log = 'Create Accounting Manager user ' + username
             Logs.objects.create(user=self.request.user,location='createAccountingManager/',action=log,result='success')
+            
+            messages.success(self.request, 'This is your password '+ password)
+            
             return HttpResponseRedirect('/administrator/')
         else:
-            log = 'Create Accounting Manager user ' + username
+            log = 'Create Accounting Manager user ' 
             Logs.objects.create(user=self.request.user,location='createAccountingManager/',action=log,result='fail')
+            
+        return render(request, self.template_name,{'form1':form1,'form2':form2, "title": self.title, "loggeduser":self.request.user})
 
+def user_manager_edit(request, pk):
+
+    if request.method == 'POST':
+        user_details = User_Details.objects.get(user_id=request.user)
+        form1 = UpdateUserForm(request.POST, instance=request.user)
+        form2 = UserDetailsForm(request.POST, instance=user_details)
+        
+        if all([form1.is_valid(), form2.is_valid()]):
+            user = form1.save(commit=False)
+            username = form1.cleaned_data['username']
+            password = form1.cleaned_data['password']
+            user.set_password(password)
+            email = form1.cleaned_data['email']
+            user.save()
+            
+            user_details = form2.save(commit=False)
+            
+            user_details.save()
+            
+            
+            user = authenticate(username=username,password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request,user)
+            
+            
+            return HttpResponseRedirect('/user/'+str(request.user.id)+'/')
+
+    else:
+        user_details = User_Details.objects.get(user_id=request.user)
+        form1 = UpdateUserForm( instance=request.user)
+        form2 = UserDetailsForm( instance=user_details)
+
+    return render(request, 'aion/register_manager.html', {
+        'form1':form1,'form2':form2,"title": 'Update'})
             
 
 
@@ -195,7 +259,13 @@ def user_edit(request, pk):
         form4 = AddressDetailsForm(request.POST, instance=user_details.shipping_address)
 
         if all([form1.is_valid(), form2.is_valid(), form3.is_valid(), form4.is_valid()]):
-            user = form1.save()
+            user = form1.save(commit=False)
+            username = form1.cleaned_data['username']
+            password = form1.cleaned_data['password']
+            user.set_password(password)
+            email = form1.cleaned_data['email']
+            user.save()
+            
             user_details = form2.save(commit=False)
             billing_address = form3.save()
             shipping_address = form4.save()
@@ -203,6 +273,15 @@ def user_edit(request, pk):
             user_details.billing_address = billing_address
             user_details.shipping_address = shipping_address
             user_details.save()
+            
+            #return User objects if credentials are correct
+            user = authenticate(username=username,password=password)
+   
+            if user is not None:
+
+                if user.is_active:
+                    login(request,user)
+            
 
             return HttpResponseRedirect('/user/'+str(request.user.id)+'/')
 

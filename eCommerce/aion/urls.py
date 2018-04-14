@@ -18,6 +18,7 @@ urlpatterns = [
     path('product/<int:pk>/', views.ViewProduct.as_view(), name='viewproduct'),
     path('user/<int:pk>/', views.ViewAccount.as_view(), name='viewaccount'),
     path('user/<int:pk>/edit/', views.user_edit, name='editaccount'),
+    path('user/<int:pk>/manager/edit/', views.user_manager_edit, name='editmanageraccount'),
     path('register/', views.UserFormView.as_view(), name='register'),
     path('cart/', views.CartView.as_view(), name='cart'),
     path('cart/order/<int:pk>/delete', views.delete_order, name='delete-order'),

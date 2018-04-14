@@ -78,6 +78,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" />
+    <script>
+        {% for message in messages %}
+            alert("{{message}}");
+        {% endfor %}
+    </script>
 
     <!-- For initialization of componenents -->
     <script type="text/javascript">

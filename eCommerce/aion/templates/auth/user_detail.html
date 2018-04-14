@@ -1,5 +1,7 @@
 {% extends 'aion/navigationbar.html' %}
 {% load static %}
+{% load aion_extras %}
+{% load humanize %}
 {% block content %}
 <div class="main_product_details">
     <div class="item user_details_post">
@@ -57,8 +59,11 @@
                   <p>
                     <i class="material-icons cyan-text text-darken-2">email</i> {{ user.email }}</p>
                     {% if loggeduser == object %}
-                  <p>
-                      <a href="{% url 'editaccount' object.id %}">Edit Info</a></p>
+                        {% if request.user|has_group:"Customer"%}
+                        <p><a href="{% url 'editaccount' object.id %}">Edit Info</a></p>
+                        {% elif request.user|has_group:"Accounting Manager" or request.user|has_group:"Product Manager" %}
+                        <p><a href="{% url 'editmanageraccount' object.id %}">Edit Info</a></p>
+                        {% endif %}
                     {% endif %}
 <!--                
                   <p>

@@ -4,7 +4,7 @@ from django.db.models import Q
 from .models import *
 from django import forms
 from django.contrib.auth import authenticate, login, logout, get_user_model
-from .backends import *
+#from .backends import *
 
 
 class ProductManagerForm(forms.ModelForm):
@@ -15,9 +15,17 @@ class ProductManagerForm(forms.ModelForm):
 
 class AccountingManagerForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
+
+    def clean(self):
+        cleaned_data = super(AccountingManagerForm, self).clean()
+        username = cleaned_data.get('username')
+        if username and User.objects.filter(username__iexact=username).exists():
+            self.add_error('username', 'A user with that username already exists.')
+        return cleaned_data
+    
     class Meta:
         model = User
-        fields = ('username', 'password', 'email')
+        fields = ('username','password','email')
 
 
 class ProductForm(forms.ModelForm):
@@ -43,10 +51,11 @@ class UserForm(forms.ModelForm):
     
 
 class UpdateUserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        fields = ('username','email')
+        fields = ('username','password','email')
 
 class UserDetailsForm(forms.ModelForm):
 
@@ -90,15 +99,17 @@ class UserLoginForm(forms.Form):
 
         user = authenticate(username=username, password=password)
 
-
-        #user = User.objects.filter(username=username)
-        #if user_qs.count()==1:
-        #    user = user_qs.first()
         if username and password:
             user = authenticate(username=username, password= password)
-            if not user:
+            
+            if User.objects.filter(username=username).exists():
+                log_user = User.objects.get(username=username)
+                if not log_user.check_password(password):
+                    raise forms.ValidationError("Incorrect Username or Password")
+                elif not log_user.is_active:
+                    raise forms.ValidationError("Account is not Active")
+            else:
                 raise forms.ValidationError("Incorrect Username or Password")
-            if not user.check_password(password):
-                raise forms.ValidationError("Incorrect Username or Password")
+                
 
         return super(UserLoginForm, self).clean(*args, **kwargs)
