@@ -232,12 +232,6 @@ def login_view(request):
         username = form.cleaned_data.get("username")
         password = form.cleaned_data.get("password")
         user = authenticate(username=username, password=password)
-        # try:
-        #     del request.session[username]
-        #     print('deleted')
-        # except Exception as e:
-        #     print(e)
-        #     print('eto ba yun?')
         login(request,user)
         request.session[username] = request.session.session_key
         return HttpResponseRedirect('/')
