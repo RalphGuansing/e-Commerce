@@ -9,7 +9,7 @@ admin.site.register(Order)
 
 
 class LogsAdmin(admin.ModelAdmin):
-	list_display = ('user','date','action')
+	list_display = ('user','date','location','action','result')
 
 admin.site.register(Logs, LogsAdmin)
 

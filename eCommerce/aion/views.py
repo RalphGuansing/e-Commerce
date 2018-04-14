@@ -16,6 +16,7 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out, user_lo
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib import messages
+from axes.models import *
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
@@ -68,9 +69,12 @@ class ProductManagerFormView(generic.View):
             user_details.user_id = user
             user_details.save()
 
-            log = 'Created Product Manager user' + username
-            Logs.objects.create(user=self.request.user,action=log)
+            log = 'Create Product Manager user' + username
+            Logs.objects.create(user=self.request.user,location='createProductManager/',action=log,result='success')
             return HttpResponseRedirect('/administrator/')
+        else:
+            log = 'Create Product Manager user' + username
+            Logs.objects.create(user=self.request.user,location='createProductManager/',action=log,result='fail')
 
 
 class AccountingManagerFormView(generic.View):
@@ -105,10 +109,14 @@ class AccountingManagerFormView(generic.View):
             user_details.user_id = user
             user_details.save()
 
-            log = 'Created Accounting Manager user' + username
-            Logs.objects.create(user=self.request.user,action=log)
-
+            log = 'Create Accounting Manager user ' + username
+            Logs.objects.create(user=self.request.user,location='createAccountingManager/',action=log,result='success')
             return HttpResponseRedirect('/administrator/')
+        else:
+            log = 'Create Accounting Manager user ' + username
+            Logs.objects.create(user=self.request.user,location='createAccountingManager/',action=log,result='fail')
+
+            
 
 
 
@@ -166,7 +174,7 @@ class UserFormView(generic.View):
 
             #return User objects if credentials are correct
             user = authenticate(username=username,password=password)
-
+            print(user.user_login_failed())
             if user is not None:
 
                 if user.is_active:
@@ -215,13 +223,35 @@ def login_view(request):
     title = "Login"
     form = UserLoginForm(request.POST or None)
 
+    try:
+        temp_credentials = dict(form.data.dict())
+    except:
+        pass
+
     if form.is_valid():
         username = form.cleaned_data.get("username")
         password = form.cleaned_data.get("password")
         user = authenticate(username=username, password=password)
-        login(request,user)
-        # user_logged_in.connect(user_logged_in_handler)
-        return HttpResponseRedirect('/')
+        print(user)
+        if user is not None:
+            login(request,user)
+            return HttpResponseRedirect('/')
+    else:
+        try:
+            user_login_failed.send(
+                sender = User,
+                request = request,
+                credentials = {
+                    'username':temp_credentials['username']
+                }
+            )
+            obj = AccessAttempt.objects.filter(username=temp_credentials['username'])
+            print(list(obj)[0].failures_since_start)
+            if list(obj)[0].failures_since_start > 5:
+                User.objects.filter(username=temp_credentials['username']).update(is_active=False)
+                print('lockout')
+        except:
+            pass
     return render(request, "aion/login.html",{"form":form, "title": title})
 
 #Add Product
@@ -232,7 +262,7 @@ class CreateProductView(CreateView):
     def form_valid(self, form):
         form.instance.user_id = self.request.user
         log = 'Added item ' + str(form.instance.item_name)
-        Logs.objects.create(user=self.request.user,action=log)
+        Logs.objects.create(user=self.request.user,location='addproduct/',action=log,result='success')
         return super(CreateProductView, self).form_valid(form)
     
     def get_context_data(self, **kwargs):
@@ -271,8 +301,8 @@ class EditProductView(generic.UpdateView):
     def get_context_data(self, **kwargs):
         context = super(EditProductView, self).get_context_data(**kwargs)
         context["loggeduser"] = self.request.user
-        log = 'Edited item' + self.object.item_name
-        Logs.objects.create(user=self.request.user,action=log)
+        log = 'Edit item ' + self.object.item_name
+        Logs.objects.create(user=self.request.user,location='/edit/',action=log,result='success')
         return context
 
 #Delete Product
@@ -291,8 +321,8 @@ class DeleteProductView(generic.DeleteView):
 
     def get_success_url(self):
         # Assuming there is a ForeignKey from Comment to Post in your model
-        log = 'Deleted item' + self.object.item_name
-        Logs.objects.create(user=self.request.user,action=log)
+        log = 'Deleted item ' + self.object.item_name
+        Logs.objects.create(user=self.request.user,location='/delete/',action=log,result='success')
         return reverse('home')
 
 

@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'ac9=*7yundjl3xnf=f(!yo&+j=((9%hvz%e30v40#rp0vg+55+'
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+#SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 # SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_NAME = 'id'
 SESSION_COOKIE_HTTPONLY = True
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'material',
     'material.frontend',
     'mathfilters',
+    #'lockout',
     'axes',
 ]
 
@@ -65,6 +66,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    
     'aion.middleware.AutoLogout',
     'aion.middleware.UserRestrict',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -103,6 +105,12 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+
+AUTHENTICATION_BACKENDS = [
+    #'axes.backends.AxesModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 
 # Password validation
@@ -169,8 +177,9 @@ CRISPY_TEMPLATE_PACK = 'materialize_css_forms'
 
 
 #Password brute force security
-AXES_FAILURE_LIMIT = 5
+AXES_FAILURE_LIMIT = 4
 AXES_LOCK_OUT_AT_FAILURE = True
+AXES_ONLY_USER_FAILURES = True
 AXES_LOCKOUT_TEMPLATE = None
 #manage.py axes_reset
 #manage.py axes_reset ip

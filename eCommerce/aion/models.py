@@ -103,5 +103,7 @@ class Review(models.Model):
 class Logs(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     date = models.DateField(default=datetime.now,blank=True)
+    location = models.CharField(max_length=300)
     action = models.CharField(max_length=300)
+    result = models.CharField(max_length=30)
 
