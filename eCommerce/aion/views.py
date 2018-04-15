@@ -64,7 +64,7 @@ class ProductManagerFormView(generic.View):
             string = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             hash_object = hashlib.md5(string.encode())
             hex_dig = hash_object.hexdigest()
-            print(hex_dig)
+            #print(hex_dig)
             
             password  = hex_dig[0:12]
 #            password = form1.cleaned_data['password']
