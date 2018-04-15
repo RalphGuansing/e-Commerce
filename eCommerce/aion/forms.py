@@ -58,10 +58,9 @@ class UpdateUserForm(forms.ModelForm):
         fields = ('username','password','email')
 
 class UserDetailsForm(forms.ModelForm):
-
     class Meta:
         model = User_Details
-        exclude = ('user_id','account_type')
+        exclude = ('user_id','account_type','date_created','time_created','isTemporary')
 #        exclude = ('user_id','account_type', "billing_address", "shipping_address")
 
 class AddressDetailsForm(forms.ModelForm):

@@ -2,8 +2,23 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from autoslug import AutoSlugField
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.contrib.sessions.models import Session
+class AccountManager(models.Manager):
+    
+    def check_accounts(self):
+        tempAccounts = User_Details.objects.filter(isTemporary=True)
+        for tempAccount in tempAccounts:
+            
+
+            
+            account_date = datetime.strptime(str(tempAccount.date_created)+' '+str(tempAccount.time_created),"%Y-%m-%d %H:%M:%S")
+            
+            if account_date < datetime.now()-timedelta(hours=24):
+                print(tempAccount)
+                tempAccount.user_id.is_active=False
+                tempAccount.user_id.save()
+
 
 class Address_Details(models.Model):
     house_number = models.CharField(max_length=200)
@@ -27,7 +42,12 @@ class User_Details(models.Model):
     last_name = models.CharField(max_length=200)
     billing_address = models.ForeignKey(Address_Details, on_delete=models.CASCADE, related_name ="billing_address", blank=True,null=True)
     shipping_address = models.ForeignKey(Address_Details, on_delete=models.CASCADE,related_name ="shipping_address", blank=True,null=True)
-
+    
+    #for Temporary accounts
+    date_created = models.DateField(default=datetime.now,blank=True) 
+    time_created = models.TimeField(default=datetime.now,blank=True)
+    isTemporary = models.BooleanField(default=False)
+    
     type_choice = (
         ('Customer', 'Customer'),
         ('Product Manager', 'Product Manager'),

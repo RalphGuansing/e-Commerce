@@ -78,6 +78,7 @@ class ProductManagerFormView(generic.View):
 
             user_details = form2.save(commit=False)
             user_details.user_id = user
+            user_details.isTemporary = True
             user_details.save()
 
             log = 'Create Product Manager user' + username
@@ -130,6 +131,7 @@ class AccountingManagerFormView(generic.View):
 
             user_details = form2.save(commit=False)
             user_details.user_id = user
+            user_details.isTemporary = True
             user_details.save()
             
     
@@ -161,7 +163,7 @@ def user_manager_edit(request, pk):
             user.save()
             
             user_details = form2.save(commit=False)
-            
+            user_details.isTemporary = False
             user_details.save()
             
             
