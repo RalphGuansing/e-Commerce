@@ -1,8 +1,11 @@
 from django.urls import path, include
 #from axes.decorators import watch_login
 from . import views
+import django.views.defaults
 
 urlpatterns = [
+    
+#    path('404/', django.views.defaults.page_not_found, ),
 #    path('', views.HomePageView.as_view(), name='home'),
     path('', views.HomeView.as_view(), name='home'),
     path('category/<slug:category>/', views.CategoryView.as_view(), name='category'),
@@ -27,17 +30,17 @@ urlpatterns = [
     path('product/<int:pk>/add_to_cart', views.add_to_cart, name='add-to-cart'),
     path('product/<int:pk>/add_review', views.CreateReviewView.as_view(), name='add-review'),
     
+     path('transactions/', views.TransactionView.as_view(), name='transactions'),
+     path('transactions/cart/<int:pk>/', views.Detail_CartView.as_view(), name='detailcart'),
     #Accounting Manager
-    path('transactions/', views.TransactionView.as_view(), name='transactions'),
-    path('transactions/cart/<int:pk>/', views.Detail_CartView.as_view(), name='detailcart'),
-    path('AM/transactions/', views.AMTransactionView.as_view(), name='transactionsAM'),
-    path('AM/transactions/cart/<int:pk>/', views.AMCartView.as_view(), name='amcart'),
-    path('AM/transactions/user/<int:pk>/', views.AMUser_TransactionView.as_view(), name='usertransactionsAM'),
+     path('AM/transactions/', views.AMTransactionView.as_view(), name='transactionsAM'),
+     path('AM/transactions/cart/<int:pk>/', views.AMCartView.as_view(), name='amcart'),
+     path('AM/transactions/user/<int:pk>/', views.AMUser_TransactionView.as_view(), name='usertransactionsAM'),
     
     #Product Manager
-    path('addproduct/', views.CreateProductView.as_view(), name='addproduct'),
-    path('product/<int:pk>/edit/', views.EditProductView.as_view(), name='editproduct'),
-    path('product/<int:pk>/delete/', views.DeleteProductView.as_view(), name='deleteproduct'),
+     path('addproduct/', views.CreateProductView.as_view(), name='addproduct'),
+     path('product/<int:pk>/edit/', views.EditProductView.as_view(), name='editproduct'),
+     path('product/<int:pk>/delete/', views.DeleteProductView.as_view(), name='deleteproduct'),
     
     #Administrator
     path('administrator/', views.AdminView.as_view(), name='administrator'),

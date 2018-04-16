@@ -5,10 +5,42 @@ from .models import *
 from django import forms
 from django.contrib.auth import authenticate, login, logout, get_user_model
 #from .backends import *
+class ProductManagerForm_2(forms.ModelForm):
+    
+    def clean(self):
+        cleaned_data = super(ProductManagerForm_2, self).clean()
+        username = cleaned_data.get('username')
+        if username and User.objects.filter(username__iexact=username).exists():
+            self.add_error('username', 'A user with that username already exists.')
+        return cleaned_data
+    
+    class Meta:
+        model = User
+        fields = ('username', 'email')
 
+class AccountingManagerForm_2(forms.ModelForm):
+
+    def clean(self):
+        cleaned_data = super(AccountingManagerForm_2, self).clean()
+        username = cleaned_data.get('username')
+        if username and User.objects.filter(username__iexact=username).exists():
+            self.add_error('username', 'A user with that username already exists.')
+        return cleaned_data
+    
+    class Meta:
+        model = User
+        fields = ('username','email')
 
 class ProductManagerForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
+    
+    def clean(self):
+        cleaned_data = super(ProductManagerForm, self).clean()
+        username = cleaned_data.get('username')
+        if username and User.objects.filter(username__iexact=username).exists():
+            self.add_error('username', 'A user with that username already exists.')
+        return cleaned_data
+    
     class Meta:
         model = User
         fields = ('username', 'password', 'email')
