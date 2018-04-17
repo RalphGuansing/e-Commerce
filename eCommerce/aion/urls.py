@@ -15,6 +15,7 @@ urlpatterns = [
     path('register/', views.UserFormView.as_view(), name='register'),
     path('product/<int:pk>/', views.ViewProduct.as_view(), name='viewproduct'),
     path('user/<int:pk>/', views.ViewAccount.as_view(), name='viewaccount'),
+    path('404/', views.ErrorView.as_view(), name='error404'),
     
     #THE OWNER OF THE ACCOUNT
     path('user/<int:pk>/edit/', views.user_edit, name='editaccount'),
@@ -31,6 +32,7 @@ urlpatterns = [
     path('product/<int:pk>/add_review', views.CreateReviewView.as_view(), name='add-review'),
     
      path('transactions/', views.TransactionView.as_view(), name='transactions'),
+    #Customer and AM
      path('transactions/cart/<int:pk>/', views.Detail_CartView.as_view(), name='detailcart'),
     #Accounting Manager
      path('AM/transactions/', views.AMTransactionView.as_view(), name='transactionsAM'),

@@ -23,6 +23,20 @@ from django.core.mail import send_mail
 import datetime
 import hashlib
 
+#Custom decorator
+def im_yours(func):
+    def check_and_call(request, *args, **kwargs):
+        #user = request.user
+        #print user.id
+        pk = kwargs["pk"]
+        user = User.objects.get(pk=pk)
+        if not (user.id == request.user.id): 
+#            return HttpResponse("It is not yours ! You are not permitted !",content_type="application/json", status=403)
+            return HttpResponseRedirect('/404/')
+        return func(request, *args, **kwargs)
+    return check_and_call
+
+#Custom Functions for group checking
 def Customer_check(user):
     return user.groups.filter(name__in=['Customer'])
 
@@ -41,10 +55,14 @@ def AM_PM_check(user):
 def Admin_check(user):
     return user.groups.filter(name__in=['Administrator'])
 
-def handler404(request):
-    response = render_to_response('404.html', {},context_instance=RequestContext(request))
-    response.status_code = 404
-    return response
+#def ErrorView(request):
+#    response = render_to_response('404.html', {},context_instance=RequestContext(request))
+#    response.status_code = 404
+#    return response
+
+#FOR ERROR
+class ErrorView(TemplateView):
+    template_name = '404.html'
 
 
 class HomePageView(TemplateView):
@@ -129,7 +147,8 @@ class UserFormView(generic.View):
 
 
         return render(request, self.template_name,{'form1':form1,'form2':form2,'form3':form3, 'form4':form4, "title": self.title})
-
+@im_yours
+@user_passes_test(Customer_check, '/404/')
 def user_edit(request, pk):
 
     if request.method == 'POST':
@@ -280,7 +299,7 @@ def logout_view(request):
 
 
 pass #Customer Functionalities
-@method_decorator(user_passes_test(Customer_check), name='dispatch')
+@method_decorator(user_passes_test(Customer_check, '/login/'), name='dispatch')
 class CartView(TemplateView):
     template_name = 'aion/cart.html'
 
@@ -305,7 +324,7 @@ class CartView(TemplateView):
         return context
 
 
-@method_decorator(user_passes_test(Customer_check), name='dispatch')
+@method_decorator(user_passes_test(Customer_check, '/404/'), name='dispatch')
 class TransactionView(TemplateView):
     template_name= 'aion/transaction_records.html'
 
@@ -336,7 +355,7 @@ class TransactionView(TemplateView):
 
         return context
 
-@method_decorator(user_passes_test(Customer_AM_check), name='dispatch')
+@method_decorator(user_passes_test(Customer_AM_check, '/404/'), name='dispatch')
 class Detail_CartView(TemplateView):
     template_name = 'aion/amcart.html'
 
@@ -360,12 +379,12 @@ class Detail_CartView(TemplateView):
         context["totalsum"] = totalsum
         return context
     
-@user_passes_test(Customer_check)
+@user_passes_test(Customer_check, '/404/')
 def delete_order(request, pk):
     order = Order.objects.get(pk=pk)
     order.delete()
     return HttpResponseRedirect('/cart/')
-@method_decorator(user_passes_test(Customer_check), name='dispatch')
+@method_decorator(user_passes_test(Customer_check, '/404/'), name='dispatch')
 class CheckoutView(TemplateView):
     template_name = "aion/checkout.html"
 
@@ -381,7 +400,7 @@ class CheckoutView(TemplateView):
 
         return context
 
-@user_passes_test(Customer_check)
+@user_passes_test(Customer_check, '/404/')
 def PlacedOrder(request):
     userid = request.user
     cart = Cart.objects.get(user_id=userid, isPurchased=False)
@@ -391,7 +410,7 @@ def PlacedOrder(request):
 
     return HttpResponseRedirect("/")
 
-@user_passes_test(Customer_check)
+@user_passes_test(Customer_check, '/404/')
 def add_to_cart(request, pk):
 
     try:
@@ -421,7 +440,7 @@ def add_to_cart(request, pk):
 
 
     return HttpResponseRedirect('/cart/')
-@method_decorator(user_passes_test(Customer_check), name='dispatch')
+@method_decorator(user_passes_test(Customer_check, '/404/'), name='dispatch')
 class CreateReviewView(CreateView):
     form_class = ReviewForm
     template_name = 'addreview.html'
@@ -439,7 +458,8 @@ class CreateReviewView(CreateView):
         #context["post_id"] = Offer.objects.get(id=self.kwargs['offer_id']).post_id.id
         return context
 pass #For PM AND AM
-@user_passes_test(AM_PM_check)
+@im_yours
+@user_passes_test(AM_PM_check, '/404/')
 def user_manager_edit(request, pk):
 
     if request.method == 'POST':
@@ -480,7 +500,7 @@ def user_manager_edit(request, pk):
 
 
 pass #Product Manager Functionalities
-@method_decorator(user_passes_test(PM_check), name='dispatch')
+@method_decorator(user_passes_test(PM_check, '/404/'), name='dispatch')
 class CreateProductView(CreateView):
     form_class = ProductForm
     template_name = 'addproduct.html'
@@ -498,7 +518,7 @@ class CreateProductView(CreateView):
         return context
 
 
-@method_decorator(user_passes_test(PM_check), name='dispatch')
+@method_decorator(user_passes_test(PM_check, '/404/'), name='dispatch')
 class EditProductView(generic.UpdateView):
     form_class = ProductForm
     template_name = 'addproduct.html'
@@ -515,7 +535,7 @@ class EditProductView(generic.UpdateView):
         return context
 
 #Delete Product
-@method_decorator(user_passes_test(PM_check), name='dispatch')
+@method_decorator(user_passes_test(PM_check, '/404/'), name='dispatch')
 class DeleteProductView(generic.DeleteView):
     model = Product
 
@@ -539,7 +559,7 @@ class DeleteProductView(generic.DeleteView):
     
 
 pass #Accounting Manager Functionalities
-@method_decorator(user_passes_test(AM_check), name='dispatch')
+@method_decorator(user_passes_test(AM_check, '/404/'), name='dispatch')
 class AMCartView(TemplateView):
     template_name = 'aion/amcart.html'
 
@@ -564,7 +584,7 @@ class AMCartView(TemplateView):
         return context
     
 
-@method_decorator(user_passes_test(AM_check), name='dispatch')
+@method_decorator(user_passes_test(AM_check, '/404/'), name='dispatch')
 class AMTransactionView(TemplateView):
     template_name= 'aion/transaction_recordsAM.html'
 
@@ -594,7 +614,7 @@ class AMTransactionView(TemplateView):
 
         return context
 
-@method_decorator(user_passes_test(AM_check), name='dispatch')
+@method_decorator(user_passes_test(AM_check, '/404/'), name='dispatch')
 class AMUser_TransactionView(TemplateView):
     template_name= 'aion/transaction_recordsAM.html'
 
@@ -630,7 +650,7 @@ class AMUser_TransactionView(TemplateView):
         return context
 
 pass #Administrator Functionalities
-@method_decorator(user_passes_test(Admin_check), name='dispatch')
+@method_decorator(user_passes_test(Admin_check, '/404/'), name='dispatch')
 class AdminView(TemplateView):
     template_name = "aion/admin.html"
 
@@ -668,7 +688,7 @@ class AdminView(TemplateView):
 #        context["loggeduser"] = self.request.user
 #
 #        return context
-@method_decorator(user_passes_test(Admin_check), name='dispatch')
+@method_decorator(user_passes_test(Admin_check, '/404/'), name='dispatch')
 class ProductManagerFormView(generic.View):
     form_class = ProductManagerForm_2
     second_form_class = UserDetailsForm
@@ -723,7 +743,7 @@ class ProductManagerFormView(generic.View):
             Logs.objects.create(user=self.request.user,location='createProductManager/',action=log,result='fail')
 
 
-@method_decorator(user_passes_test(Admin_check), name='dispatch')
+@method_decorator(user_passes_test(Admin_check, '/404/'), name='dispatch')
 class AccountingManagerFormView(generic.View):
     form_class = AccountingManagerForm_2
     second_form_class = UserDetailsForm
