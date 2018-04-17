@@ -71,10 +71,13 @@ class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     
     def clean(self):
+        common_usernames = ['admin','administrator','root','system','guest','operator','super','user1','demo','alex','pos','db2admin']
         cleaned_data = super(UserForm, self).clean()
         username = cleaned_data.get('username')
         if username and User.objects.filter(username__iexact=username).exists():
             self.add_error('username', 'A user with that username already exists.')
+        if username in common_usernames:
+            self.add_error('username', 'Chosen username is unsecure.')
         return cleaned_data
 
     class Meta:
