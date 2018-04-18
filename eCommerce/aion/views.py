@@ -145,7 +145,7 @@ class UserFormView(generic.View):
 
                 if user.is_active:
                     login(request,user)
-                    return HttpResponseRedirect('/')
+                    return HttpResponseRedirect('/aion')
 
 
 
@@ -220,7 +220,7 @@ def login_view(request):
         request.session[username] = request.session.session_key
         log = 'User login'
         Logs.objects.create(user=user,location='/login/',action=log,result='success')
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/aion')
     else:
         try:
             user_login_failed.send(

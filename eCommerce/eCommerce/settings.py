@@ -23,10 +23,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ac9=*7yundjl3xnf=f(!yo&+j=((9%hvz%e30v40#rp0vg+55+'
 
 #SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
-# SESSION_COOKIE_SECURE = True
+#SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_NAME = 'id'
 SESSION_COOKIE_HTTPONLY = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_PATH = '/aion'
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 #EXPIRE_AFTER = 1
 
