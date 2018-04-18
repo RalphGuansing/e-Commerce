@@ -86,10 +86,15 @@ class UserForm(forms.ModelForm):
         common_usernames = ['admin','administrator','root','system','guest','operator','super','user1','demo','alex','pos','db2admin']
         cleaned_data = super(UserForm, self).clean()
         username = cleaned_data.get('username')
+        first_name = cleaned_data.get('first_name')
+        last_name = cleaned_data.get('last_name')
+        password = cleaned_data.get('password')
         if username and User.objects.filter(username__iexact=username).exists():
             self.add_error('username', 'A user with that username already exists.')
         if username.lower() in common_usernames:
             self.add_error('username', 'Chosen username is unsecure.')
+        if first_name.lower() in password.lower() or last_name.lower() in password.lower():
+            self.add_error('password','First name or last name should not be included')
         return cleaned_data
 
     class Meta:
