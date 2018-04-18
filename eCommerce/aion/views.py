@@ -32,7 +32,7 @@ def im_yours(func):
         user = User.objects.get(pk=pk)
         if not (user.id == request.user.id): 
 #            return HttpResponse("It is not yours ! You are not permitted !",content_type="application/json", status=403)
-            return HttpResponseRedirect('/404/')
+            return HttpResponseRedirect('/aion/404/')
         return func(request, *args, **kwargs)
     return check_and_call
 
@@ -188,7 +188,7 @@ def user_edit(request, pk):
                     login(request,user)
             
 
-            return HttpResponseRedirect('/user/'+str(request.user.id)+'/')
+            return HttpResponseRedirect('/aion/user/'+str(request.user.id)+'/')
 
     else:
         user_details = User_Details.objects.get(user_id=request.user)
@@ -306,7 +306,7 @@ def logout_view(request):
     log = 'User logout'
     Logs.objects.create(user=request.user,location='/login/',action=log,result='success')
     logout(request)
-    return HttpResponseRedirect('aion/login/')
+    return HttpResponseRedirect('/aion/login/')
 
 
 pass #Customer Functionalities

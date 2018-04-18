@@ -4,6 +4,7 @@ from django.db.models import Q
 from .models import *
 from django import forms
 from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth.hashers import check_password
 #from .backends import *
 class ProductManagerForm_2(forms.ModelForm):
     
@@ -104,20 +105,29 @@ class UserForm(forms.ModelForm):
 
 class UpdateUserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
-
+    confirm_password=forms.CharField(widget=forms.PasswordInput())
+    
     def clean(self):
         common_usernames = ['admin','administrator','root','system','guest','operator','super','user1','demo','alex','pos','db2admin']
-        cleaned_data = super(UserForm, self).clean()
+        cleaned_data = super(UpdateUserForm, self).clean()
         username = cleaned_data.get('username')
-        if username and User.objects.filter(username__iexact=username).exists():
-            self.add_error('username', 'A user with that username already exists.')
-        if username.lower() in common_usernames:
-            self.add_error('username', 'Chosen username is unsecure.')
+        confirm_password = cleaned_data.get('confirm_password')
+        
+        if not check_password(confirm_password, self.instance.password):
+            self.add_error('confirm_password', 'Confirm password does not match your actual password.')
+        
+        if username != self.instance.username:
+            if username and User.objects.filter(username__iexact=username).exists():
+                self.add_error('username', 'A user with that username already exists.')
+            if username.lower() in common_usernames:
+                self.add_error('username', 'Chosen username is unsecure.')
+        
+            
         return cleaned_data
     
     class Meta:
         model = User
-        fields = ('username','password','email','first_name','last_name')
+        fields = ('username','confirm_password','password','email','first_name','last_name')
 
 class UserDetailsForm(forms.ModelForm):
     class Meta:
