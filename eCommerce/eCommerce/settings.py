@@ -178,8 +178,8 @@ CRISPY_TEMPLATE_PACK = 'materialize_css_forms'
 
 
 #Password brute force security
-AXES_FAILURE_LIMIT = 4
-#AXES_LOCK_OUT_AT_FAILURE = True
+AXES_FAILURE_LIMIT = 5
+AXES_LOCK_OUT_AT_FAILURE = False
 #AXES_ONLY_USER_FAILURES = True
 AXES_LOCKOUT_TEMPLATE = None
 #manage.py axes_reset

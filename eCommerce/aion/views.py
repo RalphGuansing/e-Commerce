@@ -218,6 +218,8 @@ def login_view(request):
         user = authenticate(username=username, password=password)
         login(request,user)
         request.session[username] = request.session.session_key
+        log = 'User login'
+        Logs.objects.create(user=user,location='/login/',action=log,result='success')
         return HttpResponseRedirect('/')
     else:
         try:
@@ -229,10 +231,12 @@ def login_view(request):
                 }
             )
             obj = AccessAttempt.objects.filter(username=temp_credentials['username'])
-   
+            log = 'User login'
+            Logs.objects.create(user=User.objects.filter(username=temp_credentials['username'])[0],location='/login/',action=log,result='fail')
             if list(obj)[0].failures_since_start > 5:
+                log = 'Account lockout due to unsuccessful attempts'
                 User.objects.filter(username=temp_credentials['username']).update(is_active=False)
-   
+                Logs.objects.create(user=User.objects.filter(username=temp_credentials['username'])[0],location='/login/',action=log,result='success')
         except:
             pass
     return render(request, "aion/login.html",{"form":form, "title": title})
@@ -299,6 +303,8 @@ class CategoryView(generic.ListView):
 
 
 def logout_view(request):
+    log = 'User logout'
+    Logs.objects.create(user=request.user,location='/login/',action=log,result='success')
     logout(request)
     return HttpResponseRedirect('/login/')
 
