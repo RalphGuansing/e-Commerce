@@ -37,9 +37,9 @@ class Address_Details(models.Model):
 
 class User_Details(models.Model):
     user_id = models.ForeignKey(User,on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=200)
-    middle_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
+    # first_name = models.CharField(max_length=200)
+    # middle_name = models.CharField(max_length=200)
+    # last_name = models.CharField(max_length=200)
     billing_address = models.ForeignKey(Address_Details, on_delete=models.CASCADE, related_name ="billing_address", blank=True,null=True)
     shipping_address = models.ForeignKey(Address_Details, on_delete=models.CASCADE,related_name ="shipping_address", blank=True,null=True)
     

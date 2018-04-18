@@ -97,7 +97,8 @@ class UserFormView(generic.View):
         form2 = self.second_form_class(None)
         form3 = self.bill_form_class(None)
         form4 = self.ship_form_class(None)
-        return render(request, self.template_name,{'form1':form1,'form2':form2,'form3':form3, 'form4':form4,"title": self.title})
+        #return render(request, self.template_name,{'form1':form1,'form2':form2,'form3':form3, 'form4':form4,"title": self.title})
+        return render(request, self.template_name,{'form1':form1,'form3':form3, 'form4':form4,"title": self.title})
 
     #process form data
     def post(self, request):
@@ -106,7 +107,8 @@ class UserFormView(generic.View):
         form3 = self.bill_form_class(request.POST)
         form4 = self.ship_form_class(request.POST)
 
-        if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid():
+        #if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid():
+        if form1.is_valid() and form3.is_valid() and form4.is_valid():
 
             user = form1.save(commit=False)
 
@@ -117,7 +119,8 @@ class UserFormView(generic.View):
                 validate_password(password,user)
             except ValidationError as e:
                 form1.add_error('password',e)
-                return render(request, self.template_name,{'form1':form1,'form2':form2,'form3':form3, 'form4':form4,"title": self.title})
+                #return render(request, self.template_name,{'form1':form1,'form2':form2,'form3':form3, 'form4':form4,"title": self.title})
+                return render(request, self.template_name,{'form1':form1,'form3':form3, 'form4':form4,"title": self.title})
 
             user.set_password(password)
             user.save()
@@ -146,7 +149,8 @@ class UserFormView(generic.View):
 
 
 
-        return render(request, self.template_name,{'form1':form1,'form2':form2,'form3':form3, 'form4':form4, "title": self.title})
+        #return render(request, self.template_name,{'form1':form1,'form2':form2,'form3':form3, 'form4':form4, "title": self.title})
+        return render(request, self.template_name,{'form1':form1,'form3':form3, 'form4':form4, "title": self.title})
     
 @im_yours
 @user_passes_test(Customer_check, '/404/')

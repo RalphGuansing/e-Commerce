@@ -94,7 +94,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username','password','email')
+        fields = ('username','password','email','first_name','last_name')
     
 
 class UpdateUserForm(forms.ModelForm):
@@ -112,7 +112,7 @@ class UpdateUserForm(forms.ModelForm):
     
     class Meta:
         model = User
-        fields = ('username','password','email')
+        fields = ('username','password','email','first_name','last_name')
 
 class UserDetailsForm(forms.ModelForm):
     class Meta:
