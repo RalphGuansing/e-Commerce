@@ -48,6 +48,9 @@ class User_Details(models.Model):
     time_created = models.TimeField(default=datetime.now,blank=True)
     isTemporary = models.BooleanField(default=False)
     
+    #for lockout
+    lockout_time = models.DateField(blank=True,null=True)
+
     type_choice = (
         ('Customer', 'Customer'),
         ('Product Manager', 'Product Manager'),
