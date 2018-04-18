@@ -306,7 +306,7 @@ def logout_view(request):
     log = 'User logout'
     Logs.objects.create(user=request.user,location='/login/',action=log,result='success')
     logout(request)
-    return HttpResponseRedirect('/login/')
+    return HttpResponseRedirect('aion/login/')
 
 
 pass #Customer Functionalities
