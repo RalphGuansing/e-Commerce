@@ -147,6 +147,7 @@ class UserFormView(generic.View):
 
 
         return render(request, self.template_name,{'form1':form1,'form2':form2,'form3':form3, 'form4':form4, "title": self.title})
+    
 @im_yours
 @user_passes_test(Customer_check, '/404/')
 def user_edit(request, pk):
@@ -741,6 +742,8 @@ class ProductManagerFormView(generic.View):
         else:
             log = 'Create Product Manager user'
             Logs.objects.create(user=self.request.user,location='createProductManager/',action=log,result='fail')
+            
+        return render(request, self.template_name,{'form1':form1,'form2':form2, "title": self.title, "loggeduser":self.request.user})
 
 
 @method_decorator(user_passes_test(Admin_check, '/404/'), name='dispatch')

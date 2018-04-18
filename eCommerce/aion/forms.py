@@ -8,10 +8,13 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 class ProductManagerForm_2(forms.ModelForm):
     
     def clean(self):
+        common_usernames = ['admin','administrator','root','system','guest','operator','super','user1','demo','alex','pos','db2admin']
         cleaned_data = super(ProductManagerForm_2, self).clean()
         username = cleaned_data.get('username')
         if username and User.objects.filter(username__iexact=username).exists():
             self.add_error('username', 'A user with that username already exists.')
+        if username.lower() in common_usernames:
+            self.add_error('username', 'Chosen username is unsecure.')
         return cleaned_data
     
     class Meta:
@@ -21,10 +24,13 @@ class ProductManagerForm_2(forms.ModelForm):
 class AccountingManagerForm_2(forms.ModelForm):
 
     def clean(self):
+        common_usernames = ['admin','administrator','root','system','guest','operator','super','user1','demo','alex','pos','db2admin']
         cleaned_data = super(AccountingManagerForm_2, self).clean()
         username = cleaned_data.get('username')
         if username and User.objects.filter(username__iexact=username).exists():
             self.add_error('username', 'A user with that username already exists.')
+        if username.lower() in common_usernames:
+            self.add_error('username', 'Chosen username is unsecure.')
         return cleaned_data
     
     class Meta:
@@ -35,10 +41,13 @@ class ProductManagerForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     
     def clean(self):
+        common_usernames = ['admin','administrator','root','system','guest','operator','super','user1','demo','alex','pos','db2admin']
         cleaned_data = super(ProductManagerForm, self).clean()
         username = cleaned_data.get('username')
         if username and User.objects.filter(username__iexact=username).exists():
             self.add_error('username', 'A user with that username already exists.')
+        if username.lower() in common_usernames:
+            self.add_error('username', 'Chosen username is unsecure.')
         return cleaned_data
     
     class Meta:
@@ -49,10 +58,13 @@ class AccountingManagerForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
 
     def clean(self):
+        common_usernames = ['admin','administrator','root','system','guest','operator','super','user1','demo','alex','pos','db2admin']
         cleaned_data = super(AccountingManagerForm, self).clean()
         username = cleaned_data.get('username')
         if username and User.objects.filter(username__iexact=username).exists():
             self.add_error('username', 'A user with that username already exists.')
+        if username.lower() in common_usernames:
+            self.add_error('username', 'Chosen username is unsecure.')
         return cleaned_data
     
     class Meta:
@@ -76,7 +88,7 @@ class UserForm(forms.ModelForm):
         username = cleaned_data.get('username')
         if username and User.objects.filter(username__iexact=username).exists():
             self.add_error('username', 'A user with that username already exists.')
-        if username in common_usernames:
+        if username.lower() in common_usernames:
             self.add_error('username', 'Chosen username is unsecure.')
         return cleaned_data
 
@@ -88,6 +100,16 @@ class UserForm(forms.ModelForm):
 class UpdateUserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
 
+    def clean(self):
+        common_usernames = ['admin','administrator','root','system','guest','operator','super','user1','demo','alex','pos','db2admin']
+        cleaned_data = super(UserForm, self).clean()
+        username = cleaned_data.get('username')
+        if username and User.objects.filter(username__iexact=username).exists():
+            self.add_error('username', 'A user with that username already exists.')
+        if username.lower() in common_usernames:
+            self.add_error('username', 'Chosen username is unsecure.')
+        return cleaned_data
+    
     class Meta:
         model = User
         fields = ('username','password','email')

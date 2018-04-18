@@ -10,8 +10,10 @@
     </div>
     <div class = "row">
         <form class = "col s12" action = "" method="POST">{% csrf_token %}
+            {{ form1.non_field_errors }}
             <div class="row">
               <div class="input-field col s12">
+                {{ form1.username.errors }}
                 {{ form1.username }}
                 <label for="username" class="">Username</label>
               </div>
