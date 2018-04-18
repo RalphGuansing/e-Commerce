@@ -16,10 +16,13 @@
             <div class="card-content">
               <span class="card-title">{{object.item_name}}</span>
               <span class="card-title"><strong>Category: </strong><a href="#">{{object.item_type}}</a></span>
-                <p><strong>Quantity: </strong>{{object.item_quantity}}</p>
+                <p><strong>Quantity: </strong>{{object.item_quantity}}
+                {% if object.item_quantity == 0 %}
+                Item out of stock.
+                {% endif %}
+                </p>
                 <strong>Description:</strong> 
                 <p>{{ object.item_description|linebreaks }}</p>
-                
                 
             </div>
             <div class="card-action">
@@ -33,7 +36,9 @@
                 <a href="#" class="waves-effect waves-light btn amber right_btn edit_btn">Sales of this product<i class="material-icons right">attach_money</i></a>
                 <a href="#" class="waves-effect waves-light btn red darken-3 right_btn">Sales of this product's type<i class="material-icons right">attach_money</i></a>
                 {% elif request.user|has_group:"Customer" %}
+                {% if object.item_quantity != 0 %}
                 <a href="{% url 'add-to-cart' object.id %}" class="waves-effect waves-light btn amber right_btn edit_btn">Add to Shopping Cart <i class="material-icons right">shopping_cart</i></a>
+                {% endif %}
                 <a href="{% url 'add-review' object.id %}" class="waves-effect waves-light btn red darken-3 right_btn">Review <i class="material-icons right">stars</i></a>
                 {% endif %}
             </div>

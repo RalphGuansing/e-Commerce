@@ -10,10 +10,12 @@ class AccountManager(models.Manager):
         tempAccounts = User_Details.objects.filter(isTemporary=True)
         for tempAccount in tempAccounts:
             
-
             
-            account_date = datetime.strptime(str(tempAccount.date_created)+' '+str(tempAccount.time_created),"%Y-%m-%d %H:%M:%S")
-            
+#            print(str(tempAccount.date_created))
+#            print(str(tempAccount.time_created))
+            account_date = datetime.strptime(str(tempAccount.date_created)+' '+str(tempAccount.time_created.replace(microsecond=0)),"%Y-%m-%d %H:%M:%S")
+            print(account_date)
+            print(tempAccount)
             if account_date < datetime.now()-timedelta(hours=24):
                 print(tempAccount)
                 tempAccount.user_id.is_active=False
@@ -61,7 +63,7 @@ class User_Details(models.Model):
     account_type = models.CharField(max_length=50, choices=type_choice, default=type_choice[0][0])
 
     def __str__(self):
-        return str(self.user_id) +', '+ self.first_name +' '+ self.last_name
+        return str(self.user_id) +', '+ self.user_id.first_name +' '+ self.user_id.last_name
 
     class Meta:
         verbose_name_plural = "User_Details"

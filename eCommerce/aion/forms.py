@@ -111,11 +111,19 @@ class UpdateUserForm(forms.ModelForm):
         common_usernames = ['admin','administrator','root','system','guest','operator','super','user1','demo','alex','pos','db2admin']
         cleaned_data = super(UpdateUserForm, self).clean()
         username = cleaned_data.get('username')
+        first_name = cleaned_data.get('first_name')
+        last_name = cleaned_data.get('last_name')
+        password = cleaned_data.get('password')
         confirm_password = cleaned_data.get('confirm_password')
+        
+        if check_password(password, self.instance.password):
+            self.add_error('password', 'New Password Cannot be the same as the Old password.')
         
         if not check_password(confirm_password, self.instance.password):
             self.add_error('confirm_password', 'Confirm password does not match your actual password.')
-        
+        if first_name.lower() in password.lower() or last_name.lower() in password.lower():
+            self.add_error('password','First name or last name should not be included')    
+    
         if username != self.instance.username:
             if username and User.objects.filter(username__iexact=username).exists():
                 self.add_error('username', 'A user with that username already exists.')
@@ -128,6 +136,36 @@ class UpdateUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username','confirm_password','password','email','first_name','last_name')
+        
+class ManagerUpdateUserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password=forms.CharField(widget=forms.PasswordInput())
+    
+    def clean(self):
+        common_usernames = ['admin','administrator','root','system','guest','operator','super','user1','demo','alex','pos','db2admin']
+        cleaned_data = super(ManagerUpdateUserForm, self).clean()
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+        
+        if check_password(password, self.instance.password):
+            self.add_error('password', 'New Password Cannot be the same as the Old password.') 
+        
+        if not check_password(confirm_password, self.instance.password):
+            self.add_error('confirm_password', 'Confirm password does not match your actual password.') 
+    
+        if username != self.instance.username:
+            if username and User.objects.filter(username__iexact=username).exists():
+                self.add_error('username', 'A user with that username already exists.')
+            if username.lower() in common_usernames:
+                self.add_error('username', 'Chosen username is unsecure.')
+        
+            
+        return cleaned_data
+    
+    class Meta:
+        model = User
+        fields = ('username','confirm_password','password','email')
 
 class UserDetailsForm(forms.ModelForm):
     class Meta:

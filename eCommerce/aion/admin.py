@@ -6,6 +6,7 @@ admin.site.register(User_Details)
 admin.site.register(Address_Details)
 admin.site.register(Cart)
 admin.site.register(Order)
+admin.site.register(Review)
 
 
 class LogsAdmin(admin.ModelAdmin):

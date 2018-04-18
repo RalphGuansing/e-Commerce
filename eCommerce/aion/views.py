@@ -153,7 +153,7 @@ class UserFormView(generic.View):
         return render(request, self.template_name,{'form1':form1,'form3':form3, 'form4':form4, "title": self.title})
     
 @im_yours
-@user_passes_test(Customer_check, '/404/')
+@user_passes_test(Customer_check, '/aion/404/')
 def user_edit(request, pk):
 
     if request.method == 'POST':
@@ -167,6 +167,15 @@ def user_edit(request, pk):
             user = form1.save(commit=False)
             username = form1.cleaned_data['username']
             password = form1.cleaned_data['password']
+            
+            try:
+                validate_password(password,user)
+            except ValidationError as e:
+                form1.add_error('password',e)
+                #return render(request, self.template_name,{'form1':form1,'form2':form2,'form3':form3, 'form4':form4,"title": self.title})
+                return render(request, 'aion/register.html',{'form1':form1,'form2':form2,'form3':form3, 'form4':form4,"title": 'Update'})
+            
+            
             user.set_password(password)
             email = form1.cleaned_data['email']
             user.save()
@@ -310,7 +319,7 @@ def logout_view(request):
 
 
 pass #Customer Functionalities
-@method_decorator(user_passes_test(Customer_check, '/login/'), name='dispatch')
+@method_decorator(user_passes_test(Customer_check, '/aion/login/'), name='dispatch')
 class CartView(TemplateView):
     template_name = 'aion/cart.html'
 
@@ -335,7 +344,7 @@ class CartView(TemplateView):
         return context
 
 
-@method_decorator(user_passes_test(Customer_check, '/404/'), name='dispatch')
+@method_decorator(user_passes_test(Customer_check, '/aion/404/'), name='dispatch')
 class TransactionView(TemplateView):
     template_name= 'aion/transaction_records.html'
 
@@ -366,7 +375,7 @@ class TransactionView(TemplateView):
 
         return context
 
-@method_decorator(user_passes_test(Customer_AM_check, '/404/'), name='dispatch')
+@method_decorator(user_passes_test(Customer_AM_check, '/aion/404/'), name='dispatch')
 class Detail_CartView(TemplateView):
     template_name = 'aion/amcart.html'
 
@@ -390,12 +399,13 @@ class Detail_CartView(TemplateView):
         context["totalsum"] = totalsum
         return context
     
-@user_passes_test(Customer_check, '/404/')
+@user_passes_test(Customer_check, '/aion/404/')
 def delete_order(request, pk):
     order = Order.objects.get(pk=pk)
     order.delete()
-    return HttpResponseRedirect('/cart/')
-@method_decorator(user_passes_test(Customer_check, '/404/'), name='dispatch')
+    return HttpResponseRedirect('/aion/cart/')
+
+@method_decorator(user_passes_test(Customer_check, '/aion/404/'), name='dispatch')
 class CheckoutView(TemplateView):
     template_name = "aion/checkout.html"
 
@@ -408,20 +418,28 @@ class CheckoutView(TemplateView):
         context["loggeduser"] = self.request.user
         context["cart"] = cart
 
-
         return context
 
-@user_passes_test(Customer_check, '/404/')
+@user_passes_test(Customer_check, '/aion/404/')
 def PlacedOrder(request):
     userid = request.user
     cart = Cart.objects.get(user_id=userid, isPurchased=False)
+    
+    #get Orders
+    orders = Order.objects.filter(cart_id=cart)
+    
+    for order in orders:
+        product = order.product_id
+        product.item_quantity -= order.item_quantity
+        product.save()
+
     cart.date_created
     cart.isPurchased = True
     cart.save()
 
-    return HttpResponseRedirect("/")
+    return HttpResponseRedirect("/aion")
 
-@user_passes_test(Customer_check, '/404/')
+@user_passes_test(Customer_check, '/aion/404/')
 def add_to_cart(request, pk):
 
     try:
@@ -446,17 +464,20 @@ def add_to_cart(request, pk):
         order.save()
 
     else:
-        order.item_quantity += 1#quantity
-        order.save()
+        product = Product.objects.get(pk=pk)
+        
+        
+        if product.item_quantity > order.item_quantity:
+            order.item_quantity += 1#quantity
+            order.save()
 
 
-    return HttpResponseRedirect('/cart/')
-@method_decorator(user_passes_test(Customer_check, '/404/'), name='dispatch')
+    return HttpResponseRedirect('/aion/cart/')
+
+@method_decorator(user_passes_test(Customer_check, '/aion/404/'), name='dispatch')
 class CreateReviewView(CreateView):
     form_class = ReviewForm
     template_name = 'addreview.html'
-    
-    
     
     def form_valid(self, form):
         form.instance.user_id = self.request.user
@@ -468,20 +489,31 @@ class CreateReviewView(CreateView):
         context["loggeduser"] = self.request.user
         #context["post_id"] = Offer.objects.get(id=self.kwargs['offer_id']).post_id.id
         return context
+    
 pass #For PM AND AM
 @im_yours
-@user_passes_test(AM_PM_check, '/404/')
+@user_passes_test(AM_PM_check, '/aion/404/')
 def user_manager_edit(request, pk):
 
     if request.method == 'POST':
         user_details = User_Details.objects.get(user_id=request.user)
-        form1 = UpdateUserForm(request.POST, instance=request.user)
+        form1 = ManagerUpdateUserForm(request.POST, instance=request.user)
         form2 = UserDetailsForm(request.POST, instance=user_details)
         
         if all([form1.is_valid(), form2.is_valid()]):
             user = form1.save(commit=False)
             username = form1.cleaned_data['username']
             password = form1.cleaned_data['password']
+            
+            
+            try:
+                validate_password(password,user)
+            except ValidationError as e:
+                form1.add_error('password',e)
+                #return render(request, self.template_name,{'form1':form1,'form2':form2,'form3':form3, 'form4':form4,"title": self.title})
+                return render(request, 'aion/register_manager.html',{'form1':form1,'form2':form2,"title": 'Update'})
+            
+            
             user.set_password(password)
             email = form1.cleaned_data['email']
             user.save()
@@ -497,11 +529,11 @@ def user_manager_edit(request, pk):
                     login(request,user)
             
             
-            return HttpResponseRedirect('/user/'+str(request.user.id)+'/')
+            return HttpResponseRedirect('/aion/user/'+str(request.user.id)+'/')
 
     else:
         user_details = User_Details.objects.get(user_id=request.user)
-        form1 = UpdateUserForm( instance=request.user)
+        form1 = ManagerUpdateUserForm( instance=request.user)
         form2 = UserDetailsForm( instance=user_details)
 
     return render(request, 'aion/register_manager.html', {
@@ -511,7 +543,7 @@ def user_manager_edit(request, pk):
 
 
 pass #Product Manager Functionalities
-@method_decorator(user_passes_test(PM_check, '/404/'), name='dispatch')
+@method_decorator(user_passes_test(PM_check, '/aion/404/'), name='dispatch')
 class CreateProductView(CreateView):
     form_class = ProductForm
     template_name = 'addproduct.html'
@@ -529,7 +561,7 @@ class CreateProductView(CreateView):
         return context
 
 
-@method_decorator(user_passes_test(PM_check, '/404/'), name='dispatch')
+@method_decorator(user_passes_test(PM_check, '/aion/404/'), name='dispatch')
 class EditProductView(generic.UpdateView):
     form_class = ProductForm
     template_name = 'addproduct.html'
@@ -546,7 +578,7 @@ class EditProductView(generic.UpdateView):
         return context
 
 #Delete Product
-@method_decorator(user_passes_test(PM_check, '/404/'), name='dispatch')
+@method_decorator(user_passes_test(PM_check, '/aion/404/'), name='dispatch')
 class DeleteProductView(generic.DeleteView):
     model = Product
 
@@ -570,7 +602,7 @@ class DeleteProductView(generic.DeleteView):
     
 
 pass #Accounting Manager Functionalities
-@method_decorator(user_passes_test(AM_check, '/404/'), name='dispatch')
+@method_decorator(user_passes_test(AM_check, '/aion/404/'), name='dispatch')
 class AMCartView(TemplateView):
     template_name = 'aion/amcart.html'
 
@@ -595,7 +627,7 @@ class AMCartView(TemplateView):
         return context
     
 
-@method_decorator(user_passes_test(AM_check, '/404/'), name='dispatch')
+@method_decorator(user_passes_test(AM_check, '/aion/404/'), name='dispatch')
 class AMTransactionView(TemplateView):
     template_name= 'aion/transaction_recordsAM.html'
 
@@ -625,7 +657,7 @@ class AMTransactionView(TemplateView):
 
         return context
 
-@method_decorator(user_passes_test(AM_check, '/404/'), name='dispatch')
+@method_decorator(user_passes_test(AM_check, '/aion/404/'), name='dispatch')
 class AMUser_TransactionView(TemplateView):
     template_name= 'aion/transaction_recordsAM.html'
 
@@ -661,7 +693,7 @@ class AMUser_TransactionView(TemplateView):
         return context
 
 pass #Administrator Functionalities
-@method_decorator(user_passes_test(Admin_check, '/404/'), name='dispatch')
+@method_decorator(user_passes_test(Admin_check, '/aion/404/'), name='dispatch')
 class AdminView(TemplateView):
     template_name = "aion/admin.html"
 
@@ -699,7 +731,7 @@ class AdminView(TemplateView):
 #        context["loggeduser"] = self.request.user
 #
 #        return context
-@method_decorator(user_passes_test(Admin_check, '/404/'), name='dispatch')
+@method_decorator(user_passes_test(Admin_check, '/aion/404/'), name='dispatch')
 class ProductManagerFormView(generic.View):
     form_class = ProductManagerForm_2
     second_form_class = UserDetailsForm
@@ -747,7 +779,7 @@ class ProductManagerFormView(generic.View):
             
             messages.success(self.request, 'This is your password '+ password)
             
-            return HttpResponseRedirect('/administrator/')
+            return HttpResponseRedirect('/aion/administrator/')
         
         else:
             log = 'Create Product Manager user'
@@ -756,7 +788,7 @@ class ProductManagerFormView(generic.View):
         return render(request, self.template_name,{'form1':form1,'form2':form2, "title": self.title, "loggeduser":self.request.user})
 
 
-@method_decorator(user_passes_test(Admin_check, '/404/'), name='dispatch')
+@method_decorator(user_passes_test(Admin_check, '/aion/404/'), name='dispatch')
 class AccountingManagerFormView(generic.View):
     form_class = AccountingManagerForm_2
     second_form_class = UserDetailsForm
@@ -804,7 +836,7 @@ class AccountingManagerFormView(generic.View):
             
             messages.success(self.request, 'This is your password '+ password)
             
-            return HttpResponseRedirect('/administrator/')
+            return HttpResponseRedirect('/aion/administrator/')
         else:
             log = 'Create Accounting Manager user ' 
             Logs.objects.create(user=self.request.user,location='createAccountingManager/',action=log,result='fail')
