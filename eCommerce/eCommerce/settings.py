@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'mathfilters',
     #'lockout',
     'axes',
+    'sslserver',
 ]
 
 MIDDLEWARE = [
