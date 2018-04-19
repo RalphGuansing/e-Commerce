@@ -218,8 +218,10 @@ def login_view(request):
 
     try:
         temp_credentials = dict(form.data.dict())
-    except:
-        pass
+        print("in dictionary")
+    except Exception as e:
+        print('out dictionary')
+        print(e)
 
     if form.is_valid():
         username = form.cleaned_data.get("username")
@@ -240,14 +242,16 @@ def login_view(request):
                 }
             )
             obj = AccessAttempt.objects.filter(username=temp_credentials['username'])
+            print(obj)
             log = 'User login'
-            Logs.objects.create(user=User.objects.filter(username=temp_credentials['username'])[0],location='/login/',action=log,result='fail')
+            Logs.objects.create(user=User.objects.filter(username=temp_credentials['username'])[0],location='/aion/login/',action=log,result='fail')
             if list(obj)[0].failures_since_start > 5:
                 log = 'Account lockout due to unsuccessful attempts'
                 User.objects.filter(username=temp_credentials['username']).update(is_active=False)
                 Logs.objects.create(user=User.objects.filter(username=temp_credentials['username'])[0],location='/login/',action=log,result='success')
-        except:
-            pass
+        except Exception as e:
+            print('list')
+            print(e)
     return render(request, "aion/login.html",{"form":form, "title": title})
 
 

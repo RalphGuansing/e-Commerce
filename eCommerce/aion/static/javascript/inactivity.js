@@ -7,9 +7,11 @@ $(document).ready(function () {
     //Zero the idle timer on mouse movement.
     $(this).mousemove(function (e) {
         idleTime = 0;
+        console.log("mouse movement");
     });
     $(this).keypress(function (e) {
         idleTime = 0;
+        console.log("key pressed");
     });
 });
 
